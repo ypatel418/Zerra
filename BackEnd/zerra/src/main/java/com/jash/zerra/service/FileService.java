@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.jash.zerra.model.File;
 import com.jash.zerra.repo.FileRepo;
 
-
 @Service
 public class FileService {
 
@@ -16,8 +15,8 @@ public class FileService {
     private FileRepo repo;
 
     // Get all files
-    public List<File> getAllFiles() {
-        return repo.findAll();
+    public List<File> getAllFiles(Long UserID) {
+        return repo.findByOwnerId(UserID);
     }
 
     // Upload File
@@ -32,5 +31,5 @@ public class FileService {
     public void deleteFile(Long id) {
         repo.deleteById(id);
     }
-    
+
 }
