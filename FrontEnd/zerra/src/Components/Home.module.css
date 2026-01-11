@@ -1,0 +1,86 @@
+body{
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  height: 100vh;
+  width: 100%;
+  background-color: wheat;
+}
+
+.welcome-section {
+  width: 100%;
+  height: 33vh;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0;
+  background-color: rgb(28, 139, 158);
+  color: #fff;
+  padding: 1rem;
+}
+
+.welcome-section h1 {
+  font-size: 3rem;
+  margin: 0.5rem 0;
+}
+
+.welcome-section h3 {
+  font-size: 1.75rem;
+  margin: 0.5rem 0;
+}
+
+.welcome-section p {
+  font-size: 1.4rem;
+  margin: 0.5rem 0;
+}
+
+.welcome-section button {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  color: rgb(28, 139, 158);
+  background-color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.welcome-section button:hover {
+  background-color: #464646;
+}
+
+.features-section {
+  width: 90%;
+  margin: 20px auto;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  column-count: 2;
+  text-align: center;
+}
+
+.get-started-section {
+  width: 90%;
+  margin: 20px auto;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  text-align: center;
+}
+
+h2{
+    color: rgb(28, 139, 158);
+    font-size: 2rem;
+}
