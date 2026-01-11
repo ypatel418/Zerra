@@ -29,6 +29,7 @@ public class FileController {
         return ResponseEntity.ok(files);
     }
 
+    // NEED TO MAKE THIS ACCEPT A MULTIPART FILE
     @PostMapping("/upload")
     public ResponseEntity<File> uploadFile(@RequestPart File file) {
         try {
