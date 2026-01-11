@@ -49,7 +49,19 @@ public class FileController {
         } else {
             return new ResponseEntity<>("File not found", HttpStatus.NOT_FOUND);
         }
+    }
 
+    // Complete search files method
+    @GetMapping("/search")
+    public ResponseEntity<List<File>> searchFilesByKeyword(@org.springframework.web.bind.annotation.RequestParam String keyword) {
+        List<File> files = services.searchFilesByKeyword(keyword);
+        return ResponseEntity.ok(files);
+    }
+
+    // Complete this method
+    @GetMapping("/files/download/{id}")
+    public ResponseEntity<File> downloadFile(@PathVariable Long id) {
+        return ResponseEntity.ok(services.getFileById(id));
     }
     
 }

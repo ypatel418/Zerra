@@ -32,5 +32,10 @@ public class FileService {
     public void deleteFile(Long id) {
         repo.deleteById(id);
     }
+
+    public List<File> searchFilesByKeyword(String keyword) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'searchFilesByKeyword'");
+    }
     
 }

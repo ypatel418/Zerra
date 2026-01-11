@@ -5,6 +5,10 @@ import axios from 'axios';
 function Dashboard() {
 
   const [files, setFiles] = useState([]);
+  const [showSearchResults, setShowSearchResults] = useState(false)
+  const [input, setInput] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [noResult, setNoResult] = useState(false);
 
   useEffect(() => {
    const fetchFiles = async () => {
@@ -35,22 +39,69 @@ function Dashboard() {
     }
   };
 
-  const deleteFile = async (fileId) => {
+  const deleteFile = async (index) => {
     try {
-      await axios.delete(`/files/delete/${fileId}`);
-      setFiles(files.filter(file => file.id !== fileId));
+      await axios.delete(`/files/delete/${files[index].id}`);
+      setFiles(files.filter((_, i) => i !== index));
     } catch (error) {
       console.error('Error deleting file:', error);
     }
   };
 
-  function handleSearch(event) {
-    
-    
+  const handleChange = async (value) => {
+    setInput(value);
+    if(value.length >= 1) {
+      setShowSearchResults(true);
+      try {
+        const response =await axios.get(`/files/search?keyword=${value}`);
+        setSearchResults(response.data);
+        setNoResult(response.data.length === 0);
+        console.log("Search results:", response.data);
+      }
+      catch (error) {
+        console.error('Error searching files:', error);
+      }
+    }
+    else {
+      setShowSearchResults(false);
+      setShowSearchResults([]);
+      setNoResult(false);
+    }
+  };
+
+  function handleDownloadFile(index) {
+    axios({
+      url: `/files/download/${files[index].id}`,
+      method: 'GET',
+      responseType: 'blob',
+    }).then((response) => {
+      // Create a URL for the file
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', files[index].originalFileName);
+      document.body.appendChild(link);
+      link.click();
+    });
   }
 
-  function handleDownloadFile(fileId) {
+  function handleShareFile(fileId) {
+     const email = prompt("Enter the email address to share the file with:");
 
+     if(!email){
+       return;
+     }
+
+     try {
+        axios.post('/files/share', {
+          fileId: fileId,
+          email: email
+        });
+        alert("File shared successfully!");
+     } catch (error) {
+        console.error('Error sharing file:', error);
+        alert("Error sharing file. Please try again.");
+     }
   }
 
   // Need to add an upload file section
@@ -69,15 +120,21 @@ function Dashboard() {
 
         <div className={styles["main-content"]}>
 
-          <input type="text" placeholder='Search for files' onChange={handleSearch} />
+          <input 
+            type='search'
+            className={styles["search-input"]}
+            placeholder='Search'
+            value={input}
+            onChange={(e) => handleChange(e.target.value)}
+          />
 
           <div className={styles["file-list"]}>
-            {files.map(file => (
-              <div key={file.id} className={styles["file-item"]}>
-                <span>{file.originalFileName}</span>
-                <button onClick={() => deleteFile(file.id)}>Delete</button> 
-                <button onClick={() => handleDownloadFile(file.id)}>Download</button>
-                <button onClick={() => handleShareFile(file.id)}>Share File</button>
+            {files.map((element, index) => (
+              <div key={element.id} className={styles["file-item"]}>
+                <span>{element.originalFileName}</span>
+                <button onClick={() => deleteFile(index)}>Delete</button> 
+                <button onClick={() => handleDownloadFile(index)}>Download</button>
+                <button onClick={() => handleShareFile(element.id)}>Share File</button>
               </div>
             ))}
           </div>
