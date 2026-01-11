@@ -16,6 +16,9 @@ function Login() {
 
         try{
             await signInWithEmailAndPassword(auth, email, password);
+            // Save user's UID to local storage
+            const user = auth.currentUser;
+            localStorage.setItem("userId", user.uid);
             navigate("/dashboard");
         } catch (e) {
             alert(e.message);
