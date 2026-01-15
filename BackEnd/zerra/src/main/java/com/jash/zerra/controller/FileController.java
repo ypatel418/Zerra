@@ -23,9 +23,9 @@ public class FileController {
     @Autowired
     private FileService services;
 
-    @GetMapping("/")
-    public ResponseEntity<List<File>> getAllFiles() {
-        List<File> files = services.getAllFiles();
+    @GetMapping("/{UserID}")
+    public ResponseEntity<List<File>> getAllFiles(@PathVariable Long UserID) {
+        List<File> files = services.getAllFiles(UserID);
         return ResponseEntity.ok(files);
     }
 
@@ -63,5 +63,5 @@ public class FileController {
     public ResponseEntity<File> downloadFile(@PathVariable Long id) {
         return ResponseEntity.ok(services.getFileById(id));
     }
-    
+
 }
