@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jash.zerra.model.File;
 import com.jash.zerra.service.FileService;
@@ -30,11 +31,10 @@ public class FileController {
         return ResponseEntity.ok(files);
     }
 
-    // NEED TO MAKE THIS ACCEPT A MULTIPART FILE
-    @PostMapping("/upload")
-    public ResponseEntity<File> uploadFile(@RequestPart File file) {
+    @PostMapping("/upload/{userID}")
+    public ResponseEntity<File> uploadFile(@RequestPart MultipartFile file, @PathVariable Long userID) {
         try {
-            File savedFile = services.uploadFile(file);
+            File savedFile = services.uploadFile(file, userID);
             return new ResponseEntity<>(savedFile, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
