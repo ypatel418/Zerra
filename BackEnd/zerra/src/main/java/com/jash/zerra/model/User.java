@@ -2,6 +2,8 @@ package com.jash.zerra.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,5 +36,6 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    @JsonManagedReference //this tells spring boot that this the top part of the relationship and to keep going down.
     private List<File> files;
 }
