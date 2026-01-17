@@ -25,6 +25,7 @@ public class FileController {
     @Autowired
     private FileService services;
 
+    // This is wrong, see comment in FileService for details
     @GetMapping("/{UserID}")
     public ResponseEntity<List<File>> getAllFiles(@PathVariable Long UserID) {
         List<File> files = services.getAllFiles(UserID);

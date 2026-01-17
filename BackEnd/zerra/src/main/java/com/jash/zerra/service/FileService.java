@@ -19,7 +19,7 @@ public class FileService {
     @Autowired
     private UserRepo userRepo;
 
-    
+    // Needs to be changed for firebase's UID, this is wrong
     public List<File> getAllFiles(Long UserID) {
         return repo.findByOwnerId(UserID);
     }
