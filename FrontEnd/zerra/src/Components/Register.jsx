@@ -35,6 +35,19 @@ function Register() {
         try{
             await createUserWithEmailAndPassword(auth, email, password);
             alert("Account Created Successfully!");
+
+            // Send to the backend the user's email and their firebase unique ID
+            const user = auth.currentUser;
+            await fetch("http://localhost:8080/users/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    firebaseUid: user.uid
+                })
+            });
             navigate("/");
         } catch (e) {
             alert(e.message);
