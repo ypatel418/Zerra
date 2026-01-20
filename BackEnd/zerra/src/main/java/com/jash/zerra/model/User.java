@@ -27,13 +27,7 @@ public class User {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String username;
-
-    @Column(unique = true, nullable = false)
     private String email;
-
-    @Column(nullable = false)
-    private String password;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     @JsonManagedReference //this tells spring boot that this the top part of the relationship and to keep going down.
