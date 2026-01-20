@@ -24,12 +24,13 @@ import lombok.NoArgsConstructor;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @Column(unique = true, nullable = false)
     private String email;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
-    @JsonManagedReference //this tells spring boot that this the top part of the relationship and to keep going down.
+    @JsonManagedReference // this tells spring boot that this the top part of the relationship and to keep
+                          // going down.
     private List<File> files;
 }

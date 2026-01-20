@@ -27,13 +27,13 @@ public class FileController {
 
     // This is wrong, see comment in FileService for details
     @GetMapping("/{UserID}")
-    public ResponseEntity<List<File>> getAllFiles(@PathVariable Long UserID) {
+    public ResponseEntity<List<File>> getAllFiles(@PathVariable String UserID) {
         List<File> files = services.getAllFiles(UserID);
         return ResponseEntity.ok(files);
     }
 
     @PostMapping("/upload/{userID}")
-    public ResponseEntity<File> uploadFile(@RequestPart MultipartFile file, @PathVariable Long userID) {
+    public ResponseEntity<File> uploadFile(@RequestPart MultipartFile file, @PathVariable String userID) {
         try {
             File savedFile = services.uploadFile(file, userID);
             return new ResponseEntity<>(savedFile, HttpStatus.OK);
@@ -43,7 +43,7 @@ public class FileController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteFile(@PathVariable Long id) {
+    public ResponseEntity<String> deleteFile(@PathVariable String id) {
         File file = services.getFileById(id);
         if (file != null) {
             services.deleteFile(id);
@@ -54,14 +54,14 @@ public class FileController {
     }
 
     @GetMapping("/search/{userID}")
-    public ResponseEntity<List<File>> searchFilesByKeyword(@RequestParam String keyword, @PathVariable Long userID) {
+    public ResponseEntity<List<File>> searchFilesByKeyword(@RequestParam String keyword, @PathVariable String userID) {
         List<File> files = services.searchFilesByKeyword(keyword, userID);
         return ResponseEntity.ok(files);
     }
 
     // Complete this method
     @GetMapping("/files/download/{id}")
-    public ResponseEntity<File> downloadFile(@PathVariable Long id) {
+    public ResponseEntity<File> downloadFile(@PathVariable String id) {
         return ResponseEntity.ok(services.getFileById(id));
     }
 
