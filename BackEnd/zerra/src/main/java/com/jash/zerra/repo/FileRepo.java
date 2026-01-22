@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.jash.zerra.model.File;
 
 @Repository
-public interface FileRepo extends JpaRepository<File, String> {
+public interface FileRepo extends JpaRepository<File, Long> {
 
     public List<File> findByOwnerId(String userId);
 

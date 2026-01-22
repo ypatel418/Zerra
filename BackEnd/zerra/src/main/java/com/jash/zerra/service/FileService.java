@@ -41,11 +41,11 @@ public class FileService {
         return repo.save(f);
     }
 
-    public File getFileById(String id) {
+    public File getFileById(Long id) {
         return repo.findById(id).orElse(null);
     }
 
-    public void deleteFile(String id) {
+    public void deleteFile(Long id) {
         repo.deleteById(id);
     }
 

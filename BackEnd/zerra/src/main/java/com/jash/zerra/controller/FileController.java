@@ -44,7 +44,7 @@ public class FileController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteFile(@PathVariable String id) {
+    public ResponseEntity<String> deleteFile(@PathVariable Long id) {
         File file = services.getFileById(id);
         if (file != null) {
             services.deleteFile(id);
@@ -62,7 +62,7 @@ public class FileController {
 
     // Complete this method
     @GetMapping("/files/download/{id}")
-    public ResponseEntity<File> downloadFile(@PathVariable String id) {
+    public ResponseEntity<File> downloadFile(@PathVariable Long id) {
         return ResponseEntity.ok(services.getFileById(id));
     }
 
