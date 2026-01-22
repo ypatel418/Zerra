@@ -38,6 +38,7 @@ public class FileController {
             File savedFile = services.uploadFile(file, userID);
             return new ResponseEntity<>(savedFile, HttpStatus.OK);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
