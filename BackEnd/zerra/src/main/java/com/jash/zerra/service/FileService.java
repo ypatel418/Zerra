@@ -20,11 +20,11 @@ public class FileService {
     private UserRepo userRepo;
 
     // Needs to be changed for firebase's UID, this is wrong
-    public List<File> getAllFiles(Long UserID) {
+    public List<File> getAllFiles(String UserID) {
         return repo.findByOwnerId(UserID);
     }
 
-    public File uploadFile(MultipartFile file, Long userID) {
+    public File uploadFile(MultipartFile file, String userID) {
         File f = new File();
         f.setOriginalFileName(file.getOriginalFilename());
         f.setStoredFileName(file.getOriginalFilename());
@@ -41,16 +41,16 @@ public class FileService {
         return repo.save(f);
     }
 
-    public File getFileById(Long id) {
+    public File getFileById(String id) {
         return repo.findById(id).orElse(null);
     }
 
-    public void deleteFile(Long id) {
+    public void deleteFile(String id) {
         repo.deleteById(id);
     }
 
-    public List<File> searchFilesByKeyword(String keyword, Long userID) {
+    public List<File> searchFilesByKeyword(String keyword, String userID) {
         return repo.searchFilesByKeyword(keyword, userID);
     }
-    
+
 }

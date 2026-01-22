@@ -5,7 +5,6 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -47,17 +46,15 @@ public class File {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    //having a column point to a user causes an infinite loop since we also have a column pointing to 
-    //file in the user table, and spring converts everything to json causing the loop
-    @JsonBackReference //this tells spring boot to stop since we got here through the user
+    // having a column point to a user causes an infinite loop since we also have a
+    // column pointing to
+    // file in the user table, and spring converts everything to json causing the
+    // loop
+    @JsonBackReference // this tells spring boot to stop since we got here through the user
     private User owner;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "files_shares",
-        joinColumns = @JoinColumn(name = "file_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+    @JoinTable(name = "files_shares", joinColumns = @JoinColumn(name = "file_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> sharedWith; // Want a set to avoid duplicate users
-    
+
 }

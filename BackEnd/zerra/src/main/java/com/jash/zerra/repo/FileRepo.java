@@ -10,14 +10,14 @@ import org.springframework.stereotype.Repository;
 import com.jash.zerra.model.File;
 
 @Repository
-public interface FileRepo extends JpaRepository<File, Long> {
+public interface FileRepo extends JpaRepository<File, String> {
 
-    public List<File> findByOwnerId(Long userId);
+    public List<File> findByOwnerId(String userId);
 
-    @Query("SELECT f " +  
-        "FROM File f " + 
-        "WHERE f.owner.id = :userID AND " + 
-        "LOWER(f.storedFileName) LIKE LOWER(CONCAT('%', :keyword,'%')) OR " + 
-        "LOWER(f.originalFileName) LIKE LOWER(CONCAT('%', :keyword,'%'))")
-    public List<File> searchFilesByKeyword(@Param("keyword") String keyword, @Param("userID") Long userID);
+    @Query("SELECT f " +
+            "FROM File f " +
+            "WHERE f.owner.id = :userID AND " +
+            "LOWER(f.storedFileName) LIKE LOWER(CONCAT('%', :keyword,'%')) OR " +
+            "LOWER(f.originalFileName) LIKE LOWER(CONCAT('%', :keyword,'%'))")
+    public List<File> searchFilesByKeyword(@Param("keyword") String keyword, @Param("userID") String userID);
 }
