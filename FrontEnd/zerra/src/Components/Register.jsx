@@ -47,7 +47,7 @@ function Register() {
             // Sends the email and UID in the request body
             const response = await axios.post("http://localhost:8080/users/register", {
                 email: user.email,
-                UID: user.uid
+                id: user.uid
             });
             alert("Account Created Successfully!");
 
