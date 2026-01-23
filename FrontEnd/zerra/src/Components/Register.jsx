@@ -1,9 +1,14 @@
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase.js";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import styles from './Register.module.css';
 
 function Register() {
+
+    // Creates a navigate hook to redirect the user to the home page
+    const navigate = useNavigate();
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -34,20 +39,19 @@ function Register() {
 
         try{
             await createUserWithEmailAndPassword(auth, email, password);
-            alert("Account Created Successfully!");
 
             // Send to the backend the user's email and their firebase unique ID
             const user = auth.currentUser;
-            await fetch("http://localhost:8080/users/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email: email,
-                    firebaseUid: user.uid
-                })
+            
+            // Sends a POST request to the backend to create a new user
+            // Sends the email and UID in the request body
+            const response = await axios.post("http://localhost:8080/users/register", {
+                email: user.email,
+                UID: user.uid
             });
+            alert("Account Created Successfully!");
+
+            // Redirect to home page
             navigate("/");
         } catch (e) {
             alert(e.message);
