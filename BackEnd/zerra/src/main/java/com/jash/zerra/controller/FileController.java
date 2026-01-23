@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,9 +68,16 @@ public class FileController {
     }
 
     // Complete this method
-    @GetMapping("/files/download/{id}")
-    public ResponseEntity<File> downloadFile(@PathVariable Long id) {
-        return ResponseEntity.ok(services.getFileById(id));
+    @GetMapping("/download/{id}")
+    public ResponseEntity<byte[]> downloadFile(@PathVariable Long id) {
+
+        File file = services.getFileById(id);
+
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getStoredFileName() + "\"")
+            .contentType(MediaType.APPLICATION_OCTET_STREAM) // Binary Type
+            .contentLength(file.getData().length)
+            .body(file.getData());
     }
 
 }

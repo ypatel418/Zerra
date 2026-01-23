@@ -5,6 +5,7 @@ import axios from 'axios';
 function Dashboard() {
 
   const [files, setFiles] = useState([]);
+  const [selectFile, setSelectFile] = useState(null);
   const [showSearchResults, setShowSearchResults] = useState(false)
   const [input, setInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -33,6 +34,7 @@ function Dashboard() {
       },
     });
       setFiles(f => [...f, response.data]);
+      setSelectFile(null);
     } catch (error) {
       console.error('Error uploading file:', error);
     }
@@ -68,20 +70,26 @@ function Dashboard() {
     }
   };
 
-  function handleDownloadFile(index) {
-    axios({
-      url: `/files/download/${files[index].id}`,
-      method: 'GET',
-      responseType: 'blob',
-    }).then((response) => {
-      // Create a URL for the file
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+  async function handleDownloadFile(index) {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/files/download/${files[index].id}`,
+        { responseType: 'blob' }
+      );
+
+      const url = window.URL.createObjectURL(response.data);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', files[index].originalFileName);
+      link.download = files[index].originalFileName;
       document.body.appendChild(link);
       link.click();
-    });
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+    } catch (err) {
+      console.error("Download failed:", err);
+      alert("Failed to download file");
+    }
   }
 
   function handleShareFile(fileId) {
@@ -92,7 +100,7 @@ function Dashboard() {
      }
 
      try {
-        axios.post('/files/share', {
+        axios.post(`http://localhost:8080/files/share`, {
           fileId: fileId,
           email: email
         });
@@ -101,6 +109,18 @@ function Dashboard() {
         console.error('Error sharing file:', error);
         alert("Error sharing file. Please try again.");
      }
+  }
+
+  const handleFileChange = (e) => {
+    setSelectFile(e.target.files[0]);
+  }
+
+  const handleUploadClick = () => {
+    if (!selectFile){
+      alert("Please select a file to upload.");
+      return;
+    }
+    uploadFile(selectFile);
   }
 
   // Current problems lie in upload file
@@ -120,9 +140,9 @@ function Dashboard() {
         <div className={styles["sidebar"]}>
           <input 
             type="file" 
-            onChange={(e) => uploadFile(e.target.files[0])} 
+            onChange={handleFileChange}
           />
-          <button onClick={() => uploadFile()}>Upload File</button>
+          <button onClick={handleUploadClick}>Upload File</button>
           <ul>
             <li>Home</li>
             <li>Shared with me</li>
