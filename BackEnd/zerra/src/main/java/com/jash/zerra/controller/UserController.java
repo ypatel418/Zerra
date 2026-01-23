@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jash.zerra.model.User;
@@ -23,11 +23,12 @@ public class UserController {
 
     // Needs to be changed to accept firebase UID and email from frontend
     @PostMapping("/register")
-    public ResponseEntity<User> newUser(@RequestPart String UID, @RequestPart String email) {
+    public ResponseEntity<User> newUser(@RequestBody User user) {
         try {
-            User user = service.newUser(UID, email);
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            User user2 = service.newUser(user);
+            return new ResponseEntity<>(user2, HttpStatus.OK);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

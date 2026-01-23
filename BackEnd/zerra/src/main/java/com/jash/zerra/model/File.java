@@ -45,7 +45,7 @@ public class File {
     private LocalDateTime uploadedAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     // having a column point to a user causes an infinite loop since we also have a
     // column pointing to
     // file in the user table, and spring converts everything to json causing the
@@ -54,7 +54,7 @@ public class File {
     private User owner;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "files_shares", joinColumns = @JoinColumn(name = "file_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JoinTable(name = "files_shares", joinColumns = @JoinColumn(name = "file_id"), inverseJoinColumns = @JoinColumn(name = "user_uid"))
     private Set<User> sharedWith; // Want a set to avoid duplicate users
 
 }
