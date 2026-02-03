@@ -12,10 +12,8 @@ public class UserService {
     @Autowired
     private UserRepo repo;
 
-    public User newUser(String UID, String email) {
-        User user = new User();
-        user.setEmail(email);
-        user.setId(UID);
+    public User newUser(User user) {
+        System.out.println(user.getEmail());
         return repo.save(user);
     }
 }

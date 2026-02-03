@@ -45,7 +45,7 @@ public class File {
     private LocalDateTime uploadedAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     // having a column point to a user causes an infinite loop since we also have a
     // column pointing to
     // file in the user table, and spring converts everything to json causing the

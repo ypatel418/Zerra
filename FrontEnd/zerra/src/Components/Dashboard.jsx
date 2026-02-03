@@ -1,10 +1,11 @@
- import React, { useState, useEffect } from 'react';
+ import React, { useState, useEffect, } from 'react';
 import styles from './Dashboard.module.css';
 import axios from 'axios';
 
 function Dashboard() {
 
   const [files, setFiles] = useState([]);
+  const [selectFile, setSelectFile] = useState(null);
   const [showSearchResults, setShowSearchResults] = useState(false)
   const [input, setInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -13,8 +14,7 @@ function Dashboard() {
   useEffect(() => {
    const fetchFiles = async () => {
      try{
-        const response = await axios.get(`/files/${localStorage.getItem("userId")}`);
-        console.log("Fetched files:", response.data);
+        const response = await axios.get(`http://localhost:8080/files/${localStorage.getItem("userId")}`);
         setFiles(response.data);
      }catch(e){
         console.error("Error fetching files:", e);
@@ -28,12 +28,13 @@ function Dashboard() {
     formData.append('file', file);
 
     try {
-      const response = await axios.post('/files/upload', formData, {
+      const response = await axios.post(`http://localhost:8080/files/upload/${localStorage.getItem("userId")}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
       setFiles(f => [...f, response.data]);
+      setSelectFile(null);
     } catch (error) {
       console.error('Error uploading file:', error);
     }
@@ -41,7 +42,7 @@ function Dashboard() {
 
   const deleteFile = async (index) => {
     try {
-      await axios.delete(`/files/delete/${files[index].id}`);
+      await axios.delete(`http://localhost:8080/files/delete/${files[index].id}`);
       setFiles(files.filter((_, i) => i !== index));
     } catch (error) {
       console.error('Error deleting file:', error);
@@ -53,7 +54,7 @@ function Dashboard() {
     if(value.length >= 1) {
       setShowSearchResults(true);
       try {
-        const response =await axios.get(`/files/search?keyword=${value}`);
+        const response =await axios.get(`http://localhost:8080/files/search?keyword=${value}`);
         setSearchResults(response.data);
         setNoResult(response.data.length === 0);
         console.log("Search results:", response.data);
@@ -69,20 +70,26 @@ function Dashboard() {
     }
   };
 
-  function handleDownloadFile(index) {
-    axios({
-      url: `/files/download/${files[index].id}`,
-      method: 'GET',
-      responseType: 'blob',
-    }).then((response) => {
-      // Create a URL for the file
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+  async function handleDownloadFile(index) {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/files/download/${files[index].id}`,
+        { responseType: 'blob' }
+      );
+
+      const url = window.URL.createObjectURL(response.data);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', files[index].originalFileName);
+      link.download = files[index].originalFileName;
       document.body.appendChild(link);
       link.click();
-    });
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+    } catch (err) {
+      console.error("Download failed:", err);
+      alert("Failed to download file");
+    }
   }
 
   function handleShareFile(fileId) {
@@ -93,7 +100,7 @@ function Dashboard() {
      }
 
      try {
-        axios.post('/files/share', {
+        axios.post(`http://localhost:8080/files/share`, {
           fileId: fileId,
           email: email
         });
@@ -104,13 +111,38 @@ function Dashboard() {
      }
   }
 
-  // Need to add an upload file section
-  // Currently getting an error regarding file mapping (Cannot use map on file since backend is not set up)
+  const handleFileChange = (e) => {
+    setSelectFile(e.target.files[0]);
+  }
+
+  const handleUploadClick = () => {
+    if (!selectFile){
+      alert("Please select a file to upload.");
+      return;
+    }
+    uploadFile(selectFile);
+  }
+
+  // Current problems lie in upload file
+  // When a user creates an account, their info is not being stored in the database
+  // This gives us an error when we try to upload a file since we cant map an owner to it
+  // Also, when uploading a file, the backend still states that the file is not present
+
+  // I think there are problems with the file input and upload file button not working with each other
+
+  // Download doesn't work as well
+
+  // Search also doesn't work
+
   return (
     <div className={styles["dashboard-container"]}>
       <h1>Dashboard</h1>
         <div className={styles["sidebar"]}>
-          <button onClick={() => uploadFile()}>Upload File</button>
+          <input 
+            type="file" 
+            onChange={handleFileChange}
+          />
+          <button onClick={handleUploadClick}>Upload File</button>
           <ul>
             <li>Home</li>
             <li>Shared with me</li>
@@ -144,3 +176,4 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
