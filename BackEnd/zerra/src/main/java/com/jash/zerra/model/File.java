@@ -54,7 +54,7 @@ public class File {
     private User owner;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "files_shares", joinColumns = @JoinColumn(name = "file_id"), inverseJoinColumns = @JoinColumn(name = "user_uid"))
+    @JoinTable(name = "files_shares", joinColumns = @JoinColumn(name = "file_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> sharedWith; // Want a set to avoid duplicate users
 
 }
