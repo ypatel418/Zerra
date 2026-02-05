@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.jash.zerra.model.File;
 import com.jash.zerra.service.FileService;
 
-
 // Allow requests from the frontend server
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
@@ -74,10 +73,10 @@ public class FileController {
         File file = services.getFileById(id);
 
         return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getStoredFileName() + "\"")
-            .contentType(MediaType.APPLICATION_OCTET_STREAM) // Binary Type
-            .contentLength(file.getData().length)
-            .body(file.getData());
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getStoredFileName() + "\"")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM) // Binary Type
+                .contentLength(file.getData().length)
+                .body(file.getData());
     }
 
 }

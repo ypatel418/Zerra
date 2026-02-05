@@ -54,7 +54,7 @@ function Dashboard() {
     if(value.length >= 1) {
       setShowSearchResults(true);
       try {
-        const response =await axios.get(`http://localhost:8080/files/search?keyword=${value}`);
+        const response =await axios.get(`http://localhost:8080/files/search/${localStorage.getItem("userId")}?keyword=${value}`);
         setSearchResults(response.data);
         setNoResult(response.data.length === 0);
         console.log("Search results:", response.data);
