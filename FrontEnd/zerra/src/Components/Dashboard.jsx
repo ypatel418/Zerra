@@ -65,7 +65,7 @@ function Dashboard() {
     }
     else {
       setShowSearchResults(false);
-      setShowSearchResults([]);
+      setSearchResults([]);
       setNoResult(false);
     }
   };
@@ -123,15 +123,6 @@ function Dashboard() {
     uploadFile(selectFile);
   }
 
-  // Current problems lie in upload file
-  // When a user creates an account, their info is not being stored in the database
-  // This gives us an error when we try to upload a file since we cant map an owner to it
-  // Also, when uploading a file, the backend still states that the file is not present
-
-  // I think there are problems with the file input and upload file button not working with each other
-
-  // Download doesn't work as well
-
   // Search also doesn't work
 
   return (
@@ -152,13 +143,42 @@ function Dashboard() {
 
         <div className={styles["main-content"]}>
 
-          <input 
-            type='search'
-            className={styles["search-input"]}
-            placeholder='Search'
-            value={input}
-            onChange={(e) => handleChange(e.target.value)}
-          />
+          <div className={styles["search-container"]}>
+            <input
+              type='search'
+              className={styles["search-input"]}
+              placeholder='Search files...'
+              value={input}
+              onChange={(e) => handleChange(e.target.value)}
+              onFocus={() => input && setShowSearchResults(true)}
+              onBlur={() => {
+                // Delay hiding search results to allow click events to register
+                setTimeout(() => setShowSearchResults(false), 200);
+              }}
+              />
+
+            {showSearchResults && (
+              <div className={styles["search-dropdown"]}>
+                {noResult ? (
+                  <div className={styles["search-result-item"]}>No results found</div>
+                ) : (
+                  searchResults.map((file) => (
+                    <div
+                      key={file.id}
+                      className={styles["search-result-item"]}
+                      onClick={() => {
+                        setInput(file.originalFileName);
+                        setShowSearchResults(false);
+                      }}
+                    >
+                      {file.originalFileName // Can also display other file details here if needed
+                      }
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
 
           <div className={styles["file-list"]}>
             {files.map((element, index) => (
