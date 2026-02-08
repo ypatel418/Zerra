@@ -12,12 +12,11 @@ import com.jash.zerra.model.File;
 @Repository
 public interface FileRepo extends JpaRepository<File, Long> {
 
-    public List<File> findByOwnerId(String userId);
+        public List<File> findByOwnerId(String userId);
 
-    @Query("SELECT f " +
-            "FROM File f " +
-            "WHERE f.owner.id = :userID AND " +
-            "LOWER(f.storedFileName) LIKE LOWER(CONCAT('%', :keyword,'%')) OR " +
-            "LOWER(f.originalFileName) LIKE LOWER(CONCAT('%', :keyword,'%'))")
-    public List<File> searchFilesByKeyword(@Param("keyword") String keyword, @Param("userID") String userID);
+        @Query("SELECT f FROM File f " +
+                        "WHERE f.owner.id = :userID " +
+                        "AND (LOWER(f.storedFileName) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+                        "OR LOWER(f.originalFileName) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+        List<File> searchFilesByKeyword(@Param("keyword") String keyword, @Param("userID") String userID);
 }
