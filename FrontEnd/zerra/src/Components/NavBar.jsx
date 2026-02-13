@@ -1,6 +1,17 @@
 import styles from './NavBar.module.css'
+import { auth } from "../firebase.js";
+
 function NavBar() {
 
+    const handleLogout = () => {
+        auth.signOut().then(() => {
+            localStorage.removeItem("userId");
+            console.log("User signed out");
+        }).catch((error) => {
+            alert(error.message);
+            console.log("Error signing out: ", error);
+        });
+    }
 
     return (
         <>
@@ -12,7 +23,7 @@ function NavBar() {
                 <a href='' className={styles.links}>Settings</a>
 
                 
-                <a href='./' className={styles.logout}>Logout</a>
+                <a href='./' className={styles.logout} onClick={handleLogout}>Logout</a>
             </div>
         </>
     )
