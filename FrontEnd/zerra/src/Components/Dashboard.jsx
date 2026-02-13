@@ -95,21 +95,17 @@ function Dashboard() {
 
   function handleShareFile(fileId) {
      const email = prompt("Enter the email address to share the file with:");
-
-     if(!email){
-       return;
-     }
-
-     try {
-        axios.post(`http://localhost:8080/files/share`, {
-          fileId: fileId,
-          email: email
+    
+    if (email) {
+      axios.put(`http://localhost:8080/files/share/${fileId}?email=${email}`)
+        .then(response => {
+          alert("File shared successfully!");
+        })
+        .catch(error => {
+          console.error("Error sharing file:", error);
+          alert("Failed to share file");
         });
-        alert("File shared successfully!");
-     } catch (error) {
-        console.error('Error sharing file:', error);
-        alert("Error sharing file. Please try again.");
-     }
+    }
   }
 
   const handleFileChange = (e) => {
@@ -123,8 +119,6 @@ function Dashboard() {
     }
     uploadFile(selectFile);
   }
-
-  // Search also doesn't work
 
   return (
     <>

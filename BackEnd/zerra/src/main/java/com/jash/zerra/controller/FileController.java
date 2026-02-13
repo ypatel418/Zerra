@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -31,7 +32,6 @@ public class FileController {
     @Autowired
     private FileService services;
 
-    // This is wrong, see comment in FileService for details
     @GetMapping("/{UserID}")
     public ResponseEntity<List<File>> getAllFiles(@PathVariable String UserID) {
         List<File> files = services.getAllFiles(UserID);
@@ -66,7 +66,6 @@ public class FileController {
         return ResponseEntity.ok(files);
     }
 
-    // Complete this method
     @GetMapping("/download/{id}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable Long id) {
 
@@ -77,6 +76,16 @@ public class FileController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM) // Binary Type
                 .contentLength(file.getData().length)
                 .body(file.getData());
+    }
+
+    @PutMapping("/share/{id}?email={email}")
+    public ResponseEntity<String> shareFile(@PathVariable Long id, @RequestParam String email) {
+        try{
+            services.shareFile(id, email);
+            return new ResponseEntity<>("Shared Successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to share file", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
