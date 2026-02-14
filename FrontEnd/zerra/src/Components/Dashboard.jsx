@@ -180,6 +180,7 @@ function Dashboard() {
 
             <div className={styles["file-list"]}>
               {files.map((element, index) => (
+                console.log(element),
                 <div key={element.id} className={styles["file-item"]}>
                   <span>{element.originalFileName}</span>
                   <button onClick={() => deleteFile(index)}>Delete</button> 

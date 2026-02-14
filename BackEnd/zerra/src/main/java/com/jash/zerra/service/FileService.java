@@ -1,6 +1,7 @@
 package com.jash.zerra.service;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,10 @@ public class FileService {
             throw new RuntimeException("File or user not found");
         }
 
+    }
+
+    public List<File> getSharedFiles(String userID) {
+        return repo.findBySharedWithId(userID);
     }
 
 }

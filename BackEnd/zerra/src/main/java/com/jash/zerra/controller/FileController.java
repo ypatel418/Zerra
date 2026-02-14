@@ -35,6 +35,7 @@ public class FileController {
     @GetMapping("/{UserID}")
     public ResponseEntity<List<File>> getAllFiles(@PathVariable String UserID) {
         List<File> files = services.getAllFiles(UserID);
+        files.addAll(services.getSharedFiles(UserID));
         return ResponseEntity.ok(files);
     }
 
@@ -78,7 +79,7 @@ public class FileController {
                 .body(file.getData());
     }
 
-    @PutMapping("/share/{id}?email={email}")
+    @PutMapping("/share/{id}")
     public ResponseEntity<String> shareFile(@PathVariable Long id, @RequestParam String email) {
         try{
             services.shareFile(id, email);
