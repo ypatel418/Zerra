@@ -39,6 +39,12 @@ public class FileController {
         return ResponseEntity.ok(files);
     }
 
+    @GetMapping("/share/{UserID}")
+    public ResponseEntity<List<File>> getSharedFiles(@PathVariable String UserID) {
+        List<File> files = services.getSharedFiles(UserID);
+        return ResponseEntity.ok(files);
+    }
+
     @PostMapping("/upload/{userID}")
     public ResponseEntity<File> uploadFile(@RequestPart MultipartFile file, @PathVariable String userID) {
         try {

@@ -1,4 +1,5 @@
- import React, { useState, useEffect, } from 'react';
+import React, { useState, useEffect, } from 'react';
+import { useLocation } from 'react-router-dom';
 import styles from './Dashboard.module.css';
 import axios from 'axios';
 import NavBar from './NavBar';
@@ -12,17 +13,28 @@ function Dashboard() {
   const [searchResults, setSearchResults] = useState([]);
   const [noResult, setNoResult] = useState(false);
 
+  const location = useLocation();
+  const isSharedPage = location.pathname === '/shared';
+
   useEffect(() => {
    const fetchFiles = async () => {
      try{
-        const response = await axios.get(`http://localhost:8080/files/${localStorage.getItem("userId")}`);
+      const userId = localStorage.getItem("userId");
+      if (isSharedPage) {
+        const response = await axios.get(`http://localhost:8080/files/share/${userId}`);
         setFiles(response.data);
+        return;
+      } else {
+        const response = await axios.get(`http://localhost:8080/files/${userId}`);
+        setFiles(response.data);
+        return;
+      }
      }catch(e){
         console.error("Error fetching files:", e);
      }
     };
     fetchFiles();
-  }, []);
+  }, [isSharedPage]);
 
   const uploadFile = async (file) => {
     const formData = new FormData();

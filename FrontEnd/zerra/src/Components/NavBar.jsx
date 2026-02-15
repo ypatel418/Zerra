@@ -1,4 +1,5 @@
 import styles from './NavBar.module.css'
+import { NavLink } from 'react-router-dom';
 import { auth } from "../firebase.js";
 
 function NavBar() {
@@ -16,14 +17,14 @@ function NavBar() {
     return (
         <>
             <div className={styles.NavBar}>
-                <a href='./dashboard' className={styles.links}>Dashboard</a>
+                <NavLink to='/dashboard' className={styles.links}>Dashboard</NavLink>
                 <hr className={styles.hr}/>
-                <a href='' className={styles.links}>Shared Files</a>
+                <NavLink to='/shared' className={styles.links}>Shared Files</NavLink>
                 <hr className={styles.hr}/>
-                <a href='' className={styles.links}>Settings</a>
+                <NavLink to='/settings' className={styles.links}>Settings</NavLink>
 
                 
-                <a href='./' className={styles.logout} onClick={handleLogout}>Logout</a>
+                <NavLink to='/' className={styles.logout} onClick={handleLogout}>Logout</NavLink>
             </div>
         </>
     )
