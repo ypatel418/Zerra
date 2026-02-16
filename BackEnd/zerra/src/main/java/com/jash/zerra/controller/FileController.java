@@ -89,4 +89,14 @@ public class FileController {
         }
     }
 
+    @DeleteMapping("/share/{id}")
+    public ResponseEntity<String> removeShared(@PathVariable Long id, @RequestParam String email){
+        try{
+            services.removeShared(id, email);
+            return new ResponseEntity<>("User Removed Successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to Remove User", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

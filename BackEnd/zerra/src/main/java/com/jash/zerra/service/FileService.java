@@ -71,4 +71,15 @@ public class FileService {
         return repo.findBySharedWithId(userID);
     }
 
+    public void removeShared(Long id, String email) {
+        File file = repo.findById(id).orElse(null);
+        User sharedUser = userRepo.findByEmail(email);
+        if (file != null && sharedUser != null) {
+            file.getSharedWith().remove(sharedUser);
+            repo.save(file);
+        } else {
+            throw new RuntimeException("File or user not found");
+        }
+    }
+
 }
