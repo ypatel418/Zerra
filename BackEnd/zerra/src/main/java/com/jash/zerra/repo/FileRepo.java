@@ -19,4 +19,6 @@ public interface FileRepo extends JpaRepository<File, Long> {
                         "AND (LOWER(f.storedFileName) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
                         "OR LOWER(f.originalFileName) LIKE LOWER(CONCAT('%', :keyword, '%')))")
         List<File> searchFilesByKeyword(@Param("keyword") String keyword, @Param("userID") String userID);
+
+        public List<File> findBySharedWithId(String userID);
 }

@@ -1,4 +1,5 @@
- import React, { useState, useEffect, } from 'react';
+import React, { useState, useEffect, } from 'react';
+import { useLocation } from 'react-router-dom';
 import styles from './Dashboard.module.css';
 import axios from 'axios';
 import NavBar from './NavBar';
@@ -12,17 +13,28 @@ function Dashboard() {
   const [searchResults, setSearchResults] = useState([]);
   const [noResult, setNoResult] = useState(false);
 
+  const location = useLocation();
+  const isSharedPage = location.pathname === '/shared';
+
   useEffect(() => {
    const fetchFiles = async () => {
      try{
-        const response = await axios.get(`http://localhost:8080/files/${localStorage.getItem("userId")}`);
+      const userId = localStorage.getItem("userId");
+      if (isSharedPage) {
+        const response = await axios.get(`http://localhost:8080/files/share/${userId}`);
         setFiles(response.data);
+        return;
+      } else {
+        const response = await axios.get(`http://localhost:8080/files/${userId}`);
+        setFiles(response.data);
+        return;
+      }
      }catch(e){
         console.error("Error fetching files:", e);
      }
     };
     fetchFiles();
-  }, []);
+  }, [isSharedPage]);
 
   const uploadFile = async (file) => {
     const formData = new FormData();
@@ -95,21 +107,17 @@ function Dashboard() {
 
   function handleShareFile(fileId) {
      const email = prompt("Enter the email address to share the file with:");
-
-     if(!email){
-       return;
-     }
-
-     try {
-        axios.post(`http://localhost:8080/files/share`, {
-          fileId: fileId,
-          email: email
+    
+    if (email) {
+      axios.put(`http://localhost:8080/files/share/${fileId}?email=${email}`)
+        .then(response => {
+          alert("File shared successfully!");
+        })
+        .catch(error => {
+          console.error("Error sharing file:", error);
+          alert("Failed to share file");
         });
-        alert("File shared successfully!");
-     } catch (error) {
-        console.error('Error sharing file:', error);
-        alert("Error sharing file. Please try again.");
-     }
+    }
   }
 
   const handleFileChange = (e) => {
@@ -123,8 +131,6 @@ function Dashboard() {
     }
     uploadFile(selectFile);
   }
-
-  // Search also doesn't work
 
   return (
     <>
@@ -175,8 +181,7 @@ function Dashboard() {
                           setShowSearchResults(false);
                         }}
                       >
-                        {file.originalFileName // Can also display other file details here if needed
-                        }
+                        {file.originalFileName} - {file.owner.email}
                       </div>
                     ))
                   )}
@@ -186,8 +191,9 @@ function Dashboard() {
 
             <div className={styles["file-list"]}>
               {files.map((element, index) => (
+                console.log(element),
                 <div key={element.id} className={styles["file-item"]}>
-                  <span>{element.originalFileName}</span>
+                  <span>{element.originalFileName} - {element.owner.email}</span>
                   <button onClick={() => deleteFile(index)}>Delete</button> 
                   <button onClick={() => handleDownloadFile(index)}>Download</button>
                   <button onClick={() => handleShareFile(element.id)}>Share File</button>
@@ -202,4 +208,3 @@ function Dashboard() {
 }
 
 export default Dashboard;
-

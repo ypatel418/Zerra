@@ -3,8 +3,8 @@ package com.jash.zerra.model;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -46,15 +46,14 @@ public class File {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    // having a column point to a user causes an infinite loop since we also have a
-    // column pointing to
-    // file in the user table, and spring converts everything to json causing the
-    // loop
-    @JsonBackReference // this tells spring boot to stop since we got here through the user
+    // JsonIgnoreProperties to prevent infinite recursion when serializing User -> File -> User
+    // Basically says "When converting this object to or from JSON, ignore these properties if they exist"
+    @JsonIgnoreProperties({"files", "hibernateLazyInitializer", "handler"})
     private User owner;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "files_shares", joinColumns = @JoinColumn(name = "file_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JsonIgnoreProperties({"files", "hibernateLazyInitializer", "handler"})
     private Set<User> sharedWith; // Want a set to avoid duplicate users
 
 }

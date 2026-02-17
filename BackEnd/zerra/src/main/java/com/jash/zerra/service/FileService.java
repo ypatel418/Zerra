@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jash.zerra.model.File;
+import com.jash.zerra.model.User;
 import com.jash.zerra.repo.FileRepo;
 import com.jash.zerra.repo.UserRepo;
 
@@ -19,7 +20,7 @@ public class FileService {
     @Autowired
     private UserRepo userRepo;
 
-    // Needs to be changed for firebase's UID, this is wrong
+    
     public List<File> getAllFiles(String UserID) {
         return repo.findByOwnerId(UserID);
     }
@@ -51,6 +52,22 @@ public class FileService {
 
     public List<File> searchFilesByKeyword(String keyword, String userID) {
         return repo.searchFilesByKeyword(keyword, userID);
+    }
+
+    public void shareFile(Long id, String email) {
+        File file = repo.findById(id).orElse(null);
+        User sharedUser = userRepo.findByEmail(email);
+        if (file != null && sharedUser != null) {
+            file.getSharedWith().add(sharedUser);
+            repo.save(file);
+        } else {
+            throw new RuntimeException("File or user not found");
+        }
+
+    }
+
+    public List<File> getSharedFiles(String userID) {
+        return repo.findBySharedWithId(userID);
     }
 
 }
