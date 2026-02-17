@@ -181,8 +181,7 @@ function Dashboard() {
                           setShowSearchResults(false);
                         }}
                       >
-                        {file.originalFileName // Can also display other file details here if needed
-                        }
+                        {file.originalFileName} - {file.owner.email}
                       </div>
                     ))
                   )}
@@ -194,7 +193,7 @@ function Dashboard() {
               {files.map((element, index) => (
                 console.log(element),
                 <div key={element.id} className={styles["file-item"]}>
-                  <span>{element.originalFileName}</span>
+                  <span>{element.originalFileName} - {element.owner.email}</span>
                   <button onClick={() => deleteFile(index)}>Delete</button> 
                   <button onClick={() => handleDownloadFile(index)}>Download</button>
                   <button onClick={() => handleShareFile(element.id)}>Share File</button>
@@ -209,4 +208,3 @@ function Dashboard() {
 }
 
 export default Dashboard;
-
