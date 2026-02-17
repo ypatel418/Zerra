@@ -3,6 +3,7 @@ package com.jash.zerra.service;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,6 @@ public class FileService {
     @Autowired
     private UserRepo userRepo;
 
-    
     public List<File> getAllFiles(String UserID) {
         return repo.findByOwnerId(UserID);
     }
@@ -80,6 +80,11 @@ public class FileService {
         } else {
             throw new RuntimeException("File or user not found");
         }
+    }
+
+    public Set<User> getSharedUsers(Long fileID) {
+        File file = repo.findById(fileID).orElse(null);
+        return file.getSharedWith();
     }
 
 }

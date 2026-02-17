@@ -5,9 +5,9 @@ import axios from 'axios';
 const SharingPopup = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
-  const toggleModal = () => setIsOpen(!isOpen);
+  const [users, setUsers] = useState([]);
 
-    function handleShareFile() {
+  function handleShareFile() {
     if (email) {
       axios.put(`http://localhost:8080/files/share/${props.fileId}?email=${email}`)
         .then(response => {
@@ -17,8 +17,23 @@ const SharingPopup = (props) => {
           console.error("Error sharing file:", error);
           alert("Failed to share file");
         });
+        getSharedUsers();
     }
   }
+
+  const getSharedUsers = async () => {
+    try{
+      const response = await axios.get(`http://localhost:8080/files/share/${props.fileId}`)
+      setUsers(response.data);
+    }catch(e){
+      console.error("Error fetching Users", e)
+    }
+  }
+
+  const toggleModal = () => {
+      setIsOpen(!isOpen);
+      getSharedUsers();
+    }
 
   return (
     <div className="app-container">
@@ -35,12 +50,17 @@ const SharingPopup = (props) => {
 
             <div className="modal-body">
               <label htmlFor="email">Email:</label>
-                <input type="text" id="email" name="email" placeholder="Enter Email" onChange={(e) => setEmail(e.target.value)}/>
-                
+              <input type="text" id="email" name="email" placeholder="Enter Email" onChange={(e) => setEmail(e.target.value)}/>
+              <button onClick={ () => handleShareFile()} className="btn-secondary">Share</button>
+              <div className="SharedUsers">
+                {users.map((element, index) => (
+                  <ol key={element.id}>{element.email}</ol>
+                ))}
+              </div>
+
             </div>
 
             <div className="modal-footer">
-              <button onClick={ () => handleShareFile()} className="btn-secondary">Share</button>
               <button className="btn-primary" onClick={toggleModal}>Done</button>
             </div>
           </div>
