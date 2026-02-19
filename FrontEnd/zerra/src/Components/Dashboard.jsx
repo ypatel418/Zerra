@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import styles from './Dashboard.module.css';
 import axios from 'axios';
 import NavBar from './NavBar';
+import SharingPopup from './SharingPopup'
 
 function Dashboard() {
 
@@ -144,11 +145,6 @@ function Dashboard() {
               onChange={handleFileChange}
             />
             <button onClick={handleUploadClick}>Upload File</button>
-            <ul>
-              <li>Home</li>
-              <li>Shared with me</li>
-              <li>Settings</li>
-            </ul>
           </div>
 
           <div className={styles["main-content"]}>
@@ -197,6 +193,7 @@ function Dashboard() {
                   <button onClick={() => deleteFile(index)}>Delete</button> 
                   <button onClick={() => handleDownloadFile(index)}>Download</button>
                   <button onClick={() => handleShareFile(element.id)}>Share File</button>
+                  <SharingPopup fileId={element.id}/>
                 </div>
               ))}
             </div>

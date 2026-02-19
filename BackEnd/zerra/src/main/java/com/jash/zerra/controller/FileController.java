@@ -1,6 +1,7 @@
 package com.jash.zerra.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jash.zerra.model.File;
+import com.jash.zerra.model.User;
 import com.jash.zerra.service.FileService;
 
 // Allow requests from the frontend server
@@ -87,12 +89,28 @@ public class FileController {
 
     @PutMapping("/share/{id}")
     public ResponseEntity<String> shareFile(@PathVariable Long id, @RequestParam String email) {
-        try{
+        try {
             services.shareFile(id, email);
             return new ResponseEntity<>("Shared Successfully", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Failed to share file", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @DeleteMapping("/share/{id}/{email}")
+    public ResponseEntity<String> removeShared(@PathVariable Long id, @PathVariable String email) {
+        try {
+            services.removeShared(id, email);
+            return new ResponseEntity<>("User Removed Successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to Remove User", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/share/{fileID}")
+    public ResponseEntity<Set<User>> getSharedUsers(@PathVariable Long fileID) {
+        Set<User> users = services.getSharedUsers(fileID);
+        return ResponseEntity.ok(users);
     }
 
 }
