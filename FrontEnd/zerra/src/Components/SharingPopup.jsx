@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './SharingPopup.css';
 import axios from 'axios';
+import { auth } from "../firebase.js";
 
 const SharingPopup = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,14 +18,27 @@ const SharingPopup = (props) => {
           console.error("Error sharing file:", error);
           alert("Failed to share file");
         });
-        getSharedUsers();
+    }
+  }
+
+  function removeUserShared(email) {
+    try{
+      axios.delete(`http://localhost:8080/files/share/${props.fileId}/${email}`)
+      setUsers(users.filter( (element ,i) => {
+        element.email != email;
+      }))
+    }catch(e){
+      console.error("Error Removing User", e)
     }
   }
 
   const getSharedUsers = async () => {
     try{
       const response = await axios.get(`http://localhost:8080/files/share/${props.fileId}`)
-      setUsers(response.data);
+      const filteredUsers = response.data.filter((element) => {
+        return element.email !== auth.currentUser.email;
+      })
+      setUsers(filteredUsers);
     }catch(e){
       console.error("Error fetching Users", e)
     }
@@ -54,7 +68,10 @@ const SharingPopup = (props) => {
               <button onClick={ () => handleShareFile()} className="btn-secondary">Share</button>
               <div className="SharedUsers">
                 {users.map((element, index) => (
-                  <ol key={element.id}>{element.email}</ol>
+                    <ol key={element.id}>
+                      {element.email}
+                      <button onClick={() => removeUserShared(element.email)}> Remove User</button>
+                    </ol>
                 ))}
               </div>
 

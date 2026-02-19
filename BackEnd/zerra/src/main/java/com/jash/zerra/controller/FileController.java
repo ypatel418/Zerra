@@ -91,8 +91,8 @@ public class FileController {
         }
     }
 
-    @DeleteMapping("/share/{id}")
-    public ResponseEntity<String> removeShared(@PathVariable Long id, @RequestParam String email) {
+    @DeleteMapping("/share/{id}/{email}")
+    public ResponseEntity<String> removeShared(@PathVariable Long id, @PathVariable String email) {
         try {
             services.removeShared(id, email);
             return new ResponseEntity<>("User Removed Successfully", HttpStatus.OK);
