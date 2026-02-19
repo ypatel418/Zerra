@@ -107,7 +107,7 @@ public class FileController {
         }
     }
 
-    @GetMapping("/share/{fileID}")
+    @GetMapping("/sharedUsers/{fileID}")
     public ResponseEntity<Set<User>> getSharedUsers(@PathVariable Long fileID) {
         Set<User> users = services.getSharedUsers(fileID);
         return ResponseEntity.ok(users);

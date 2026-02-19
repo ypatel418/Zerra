@@ -34,7 +34,7 @@ const SharingPopup = (props) => {
 
   const getSharedUsers = async () => {
     try{
-      const response = await axios.get(`http://localhost:8080/files/share/${props.fileId}`)
+      const response = await axios.get(`http://localhost:8080/files/sharedUsers/${props.fileId}`)
       const filteredUsers = response.data.filter((element) => {
         return element.email !== auth.currentUser.email;
       })
