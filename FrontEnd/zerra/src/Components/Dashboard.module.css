@@ -31,13 +31,36 @@
 }
 
 .file-list {
-  padding: 20px 0px;
+  padding-top: 75px;
 }
 
 .file-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr; /* controls column widths */
   align-items: center;
-  gap: 10px;
-  padding: 10px;
-  border-bottom: 1px solid #eee;
+  padding: 12px 16px;
+}
+
+.files-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  align-items: center;
+  padding: 12px 16px;
+  font-weight: bold;
+}
+
+.hr-header{
+  height: 1px;
+  width: 100%;
+  background-color: rgb(28, 139, 158);
+  box-shadow: 3px 1px 3px rgb(28, 139, 158);
+  border: none;
+}
+
+.hr-list{
+  height: 1px;
+  width: 98%;
+  background-color: rgba(28, 139, 158, 0.082);
+  box-shadow: 3px 1px 3px rgb(28, 139, 158);
+  border: none;
 }
