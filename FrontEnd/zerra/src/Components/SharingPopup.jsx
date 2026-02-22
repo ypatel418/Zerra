@@ -47,7 +47,15 @@ const SharingPopup = (props) => {
   const toggleModal = () => {
       setIsOpen(!isOpen);
       getSharedUsers();
+  }
+
+  function checkUsers() {
+    if(users.length > 0) {
+      return 'Shared Users: '
+    } else {
+      return ''
     }
+  }
 
   return (
     <div className="app-container">
@@ -63,13 +71,14 @@ const SharingPopup = (props) => {
             <div className="modal-body">
               <label htmlFor="email">Email:</label>
               <input type="text" id="email" name="email" placeholder="Enter Email" onChange={(e) => setEmail(e.target.value)}/>
-              <button onClick={ () => handleShareFile()} className="btn-secondary">Share</button>
-              <div className="SharedUsers">
+              <button onClick={ () => handleShareFile()} className="btn-secondary">Share</button>    
+              <h4 className='SharedUsers-Header'>{checkUsers()} </h4>
+              <div className="SharedUsers-List">
                 {users.map((element, index) => (
-                    <ol key={element.id}>
-                      {element.email}
-                      <button onClick={() => removeUserShared(element.email)}> Remove User</button>
-                    </ol>
+                  <>
+                    <ol key={element.id}> {element.email} </ol>
+                    <button onClick={() => removeUserShared(element.email)}> Remove User</button>
+                  </>
                 ))}
               </div>
             </div>

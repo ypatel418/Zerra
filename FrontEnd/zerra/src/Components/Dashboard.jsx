@@ -4,6 +4,7 @@ import styles from './Dashboard.module.css';
 import axios from 'axios';
 import NavBar from './NavBar';
 import SharingPopup from './SharingPopup'
+import { auth } from "../firebase.js";
 
 function Dashboard() {
 
@@ -118,6 +119,14 @@ function Dashboard() {
     uploadFile(selectFile);
   }
 
+  function isOwner(email) {
+    if (email === auth.currentUser.email) {
+      return 'Me'
+    } else {
+      return email
+    }
+  }
+
   return (
     <>
     <div className={styles.wrapper}>
@@ -181,7 +190,7 @@ function Dashboard() {
                 <>
                   <div key={element.id} className={styles["file-item"]}>
                     <span>{element.originalFileName}</span>
-                    <span>{element.owner.email}</span>
+                    <span>{isOwner(element.owner.email)}</span>
                     <button onClick={() => deleteFile(index)}>Delete</button> 
                     <button onClick={() => handleDownloadFile(index)}>Download</button>
                     <SharingPopup fileId={element.id}/>
