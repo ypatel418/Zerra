@@ -1,0 +1,15 @@
+# Ignore build artifacts
+target/
+*.jar
+
+
+# Ignore version control and IDE files
+.git
+.gitignore
+.idea/
+.vscode/
+*.iml
+
+# Ignore Docker files themselves
+Dockerfile
+docker-compose.yml
