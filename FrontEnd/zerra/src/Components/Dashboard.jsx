@@ -4,6 +4,7 @@ import styles from './Dashboard.module.css';
 import axios from 'axios';
 import NavBar from './NavBar';
 import SharingPopup from './SharingPopup'
+import { auth } from "../firebase.js";
 
 function Dashboard() {
 
@@ -106,21 +107,6 @@ function Dashboard() {
     }
   }
 
-  function handleShareFile(fileId) {
-     const email = prompt("Enter the email address to share the file with:");
-    
-    if (email) {
-      axios.put(`http://localhost:8080/files/share/${fileId}?email=${email}`)
-        .then(response => {
-          alert("File shared successfully!");
-        })
-        .catch(error => {
-          console.error("Error sharing file:", error);
-          alert("Failed to share file");
-        });
-    }
-  }
-
   const handleFileChange = (e) => {
     setSelectFile(e.target.files[0]);
   }
@@ -131,6 +117,14 @@ function Dashboard() {
       return;
     }
     uploadFile(selectFile);
+  }
+
+  function isOwner(email) {
+    if (email === auth.currentUser.email) {
+      return 'Me'
+    } else {
+      return email
+    }
   }
 
   return (
@@ -186,15 +180,23 @@ function Dashboard() {
             </div>
 
             <div className={styles["file-list"]}>
+              <div className={styles["files-header"]}>
+                <span>File Name</span>
+                <span>Owner</span>
+              </div>
+              <hr className={styles["hr-header"]}/>
               {files.map((element, index) => (
                 console.log(element),
-                <div key={element.id} className={styles["file-item"]}>
-                  <span>{element.originalFileName} - {element.owner.email}</span>
-                  <button onClick={() => deleteFile(index)}>Delete</button> 
-                  <button onClick={() => handleDownloadFile(index)}>Download</button>
-                  <button onClick={() => handleShareFile(element.id)}>Share File</button>
-                  <SharingPopup fileId={element.id}/>
-                </div>
+                <>
+                  <div key={element.id} className={styles["file-item"]}>
+                    <span>{element.originalFileName}</span>
+                    <span>{isOwner(element.owner.email)}</span>
+                    <button onClick={() => deleteFile(index)}>Delete</button> 
+                    <button onClick={() => handleDownloadFile(index)}>Download</button>
+                    <SharingPopup fileId={element.id}/>
+                  </div>
+                  <hr className={styles["hr-list"]}/>
+                </>
               ))}
             </div>
           </div>

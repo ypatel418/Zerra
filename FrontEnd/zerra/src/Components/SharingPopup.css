@@ -43,3 +43,13 @@
   border-radius: 100px;
   cursor: pointer;
 }
+
+.SharedUsers-List {
+  display: grid;
+  grid-template-columns: 1fr 0.75fr;
+  align-items: center;
+}
+
+.SharedUsers-Header {
+  padding-top: 40px;
+}

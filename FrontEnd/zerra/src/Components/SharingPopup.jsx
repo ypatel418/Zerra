@@ -47,12 +47,19 @@ const SharingPopup = (props) => {
   const toggleModal = () => {
       setIsOpen(!isOpen);
       getSharedUsers();
+  }
+
+  function checkUsers() {
+    if(users.length > 0) {
+      return 'Shared Users: '
+    } else {
+      return ''
     }
+  }
 
   return (
     <div className="app-container">
-      <button onClick={toggleModal} className="open-btn">Share File (better)</button>
-
+      <button onClick={toggleModal} className="open-btn">Share File</button>
       {isOpen && (
         <div className="modal-overlay" onClick={toggleModal}>
           {/* stopPropagation stops the window from closing when clicking inside the white box */}
@@ -61,22 +68,20 @@ const SharingPopup = (props) => {
               <h3>Share File</h3>
               <button className="close-x" onClick={toggleModal}>&times;</button>
             </div>
-
             <div className="modal-body">
               <label htmlFor="email">Email:</label>
               <input type="text" id="email" name="email" placeholder="Enter Email" onChange={(e) => setEmail(e.target.value)}/>
-              <button onClick={ () => handleShareFile()} className="btn-secondary">Share</button>
-              <div className="SharedUsers">
+              <button onClick={ () => handleShareFile()} className="btn-secondary">Share</button>    
+              <h4 className='SharedUsers-Header'>{checkUsers()} </h4>
+              <div className="SharedUsers-List">
                 {users.map((element, index) => (
-                    <ol key={element.id}>
-                      {element.email}
-                      <button onClick={() => removeUserShared(element.email)}> Remove User</button>
-                    </ol>
+                  <>
+                    <ol key={element.id}> {element.email} </ol>
+                    <button onClick={() => removeUserShared(element.email)}> Remove User</button>
+                  </>
                 ))}
               </div>
-
             </div>
-
             <div className="modal-footer">
               <button className="btn-primary" onClick={toggleModal}>Done</button>
             </div>
