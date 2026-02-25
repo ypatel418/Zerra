@@ -10,7 +10,7 @@ const SharingPopup = (props) => {
 
   function handleShareFile() {
     if (email) {
-      axios.put(`http://localhost:8080/files/share/${props.fileId}?email=${email}`)
+      axios.put(`${import.meta.env.VITE_API_URL}/files/share/${props.fileId}?email=${email}`)
         .then(response => {
           alert("File shared successfully!");
         })
@@ -23,7 +23,7 @@ const SharingPopup = (props) => {
 
   function removeUserShared(email) {
     try{
-      axios.delete(`http://localhost:8080/files/share/${props.fileId}/${email}`)
+      axios.delete(`${import.meta.env.VITE_API_URL}/files/share/${props.fileId}/${email}`)
       setUsers(users.filter( (element ,i) => {
         element.email != email;
       }))
@@ -34,7 +34,7 @@ const SharingPopup = (props) => {
 
   const getSharedUsers = async () => {
     try{
-      const response = await axios.get(`http://localhost:8080/files/sharedUsers/${props.fileId}`)
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/files/sharedUsers/${props.fileId}`)
       const filteredUsers = response.data.filter((element) => {
         return element.email !== auth.currentUser.email;
       })

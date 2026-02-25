@@ -23,11 +23,11 @@ function Dashboard() {
      try{
       const userId = localStorage.getItem("userId");
       if (isSharedPage) {
-        const response = await axios.get(`http://localhost:8080/files/share/${userId}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/files/share/${userId}`);
         setFiles(response.data);
         return;
       } else {
-        const response = await axios.get(`http://localhost:8080/files/${userId}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/files/${userId}`);
         setFiles(response.data);
         return;
       }
@@ -43,7 +43,7 @@ function Dashboard() {
     formData.append('file', file);
 
     try {
-      const response = await axios.post(`http://localhost:8080/files/upload/${localStorage.getItem("userId")}`, formData, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/files/upload/${localStorage.getItem("userId")}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -57,7 +57,7 @@ function Dashboard() {
 
   const deleteFile = async (index) => {
     try {
-      await axios.delete(`http://localhost:8080/files/delete/${files[index].id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/files/delete/${files[index].id}`);
       setFiles(files.filter((_, i) => i !== index));
     } catch (error) {
       console.error('Error deleting file:', error);
@@ -69,7 +69,7 @@ function Dashboard() {
     if(value.length >= 1) {
       setShowSearchResults(true);
       try {
-        const response =await axios.get(`http://localhost:8080/files/search/${localStorage.getItem("userId")}?keyword=${value}`);
+        const response =await axios.get(`${import.meta.env.VITE_API_URL}/files/search/${localStorage.getItem("userId")}?keyword=${value}`);
         setSearchResults(response.data);
         setNoResult(response.data.length === 0);
         console.log("Search results:", response.data);
@@ -88,7 +88,7 @@ function Dashboard() {
   async function handleDownloadFile(index) {
     try {
       const response = await axios.get(
-        `http://localhost:8080/files/download/${files[index].id}`,
+        `${import.meta.env.VITE_API_URL}/files/download/${files[index].id}`,
         { responseType: 'blob' }
       );
 
