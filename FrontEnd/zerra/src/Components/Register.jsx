@@ -45,7 +45,7 @@ function Register() {
             
             // Sends a POST request to the backend to create a new user
             // Sends the email and UID in the request body
-            const response = await axios.post('${import.meta.env.VITE_API_URL}/users/register', {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/register`, {
                 email: user.email,
                 id: user.uid
             });
