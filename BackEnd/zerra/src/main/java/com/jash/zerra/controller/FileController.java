@@ -26,7 +26,7 @@ import com.jash.zerra.model.User;
 import com.jash.zerra.service.FileService;
 
 // Allow requests from the frontend server
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = { "http://localhost:5173", "https://zerra-five.vercel.app" })
 @RestController
 @RequestMapping("/files")
 public class FileController {

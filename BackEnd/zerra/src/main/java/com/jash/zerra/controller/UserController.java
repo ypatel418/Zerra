@@ -14,12 +14,11 @@ import com.jash.zerra.service.UserService;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = { "http://localhost:5173", "https://zerra-five.vercel.app" })
 public class UserController {
 
     @Autowired
     private UserService service;
-
 
     // Needs to be changed to accept firebase UID and email from frontend
     @PostMapping("/register")
