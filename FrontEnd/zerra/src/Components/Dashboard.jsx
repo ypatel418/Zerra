@@ -72,7 +72,6 @@ function Dashboard() {
         const response =await axios.get(`${import.meta.env.VITE_API_URL}/files/search/${localStorage.getItem("userId")}?keyword=${value}`);
         setSearchResults(response.data);
         setNoResult(response.data.length === 0);
-        console.log("Search results:", response.data);
       }
       catch (error) {
         console.error('Error searching files:', error);
@@ -186,7 +185,6 @@ function Dashboard() {
               </div>
               <hr className={styles["hr-header"]}/>
               {files.map((element, index) => (
-                console.log(element),
                 <>
                   <div key={element.id} className={styles["file-item"]}>
                     <span>{element.originalFileName}</span>

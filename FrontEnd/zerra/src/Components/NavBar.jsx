@@ -7,10 +7,8 @@ function NavBar() {
     const handleLogout = () => {
         auth.signOut().then(() => {
             localStorage.removeItem("userId");
-            console.log("User signed out");
         }).catch((error) => {
             alert(error.message);
-            console.log("Error signing out: ", error);
         });
     }
 
