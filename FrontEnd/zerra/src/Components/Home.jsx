@@ -1,9 +1,23 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import styles from './Home.module.css';
 
 function Home() {
 
     const navigate = useNavigate();
+
+    const acitivateBackend = async () => {
+        try {
+            await fetch(`${import.meta.env.VITE_API_URL}/files/`);
+        } catch (e) {
+            console.error("Error activating backend:", e);
+        }
+    }
+
+    // Activate the backend when the home page loads
+    useEffect(() => {
+        acitivateBackend();
+    }, []);
 
     return(
         <div className={styles["home-container"]}>
