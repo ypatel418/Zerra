@@ -4,36 +4,41 @@ import { auth } from "../firebase.js";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from './Register.module.css';
+import TextField from '@mui/material/TextField';
+import Alert from '@mui/material/Alert';
+
 
 function Register() {
 
     // Creates a navigate hook to redirect the user to the home page
     const navigate = useNavigate();
+    const [error, setError] = useState(null);
 
     const handleRegister = async (e) => {
         e.preventDefault();
+        setError(null);
         
         const email = e.target.email.value;
         const password = e.target.password.value;
         const confirmPassword = e.target.confirmPassword.value;
         
         if (password !== confirmPassword) {
-            alert("Passwords do not match!");
+            setError("Passwords do not match!");
             return;
         }
 
         if(password.length < 8) {
-            alert("Password should be at least 8 characters long!");
+            setError("Password should be at least 8 characters long!");
             return;
         }
 
         if(!/[A-Z]/.test(password)) {
-            alert("Password should contain at least one uppercase letter!");
+            setError("Password should contain at least one uppercase letter!");
             return;
         }
 
         if(!/[0-9]/.test(password)) {
-            alert("Password should contain at least one number!");
+            setError("Password should contain at least one number!");
             return;
         }
 
@@ -54,7 +59,7 @@ function Register() {
             // Redirect to home page
             navigate("/");
         } catch (e) {
-            alert(e.message);
+            setError(e.message);
         }
 
     }
@@ -65,13 +70,35 @@ function Register() {
             <p>Password must be at least 8 characters long, contain at least one uppercase letter, and one number.</p>
             <form onSubmit={handleRegister} className={styles["register-form"]}>
                 <label htmlFor="email">Email:</label>
-                <input type="email" name="email" placeholder="Enter Email" required /> <br />
+                <TextField
+                    required
+                    name="email"
+                    id="outlined-required"
+                    label="Required"
+                    type="email"
+                />
                 <label htmlFor="password">Password:</label>
-                <input type="password" name="password" placeholder="Enter Password" required /> <br />
+                <TextField
+                    required
+                    name="password"
+                    id="outlined-required"
+                    label="Required"
+                    type="password"
+                />
                 <label htmlFor="confirmPassword">Confirm Password:</label>
-                <input type="password" name="confirmPassword" placeholder="Confirm Password" required /> <br />
+                <TextField
+                    required
+                    name="confirmPassword"
+                    id="outlined-required"
+                    label="Required"
+                    type="password"
+                />
                 <button type="submit">Register</button>
             </form>
+
+            { // sets the error state to an alert if there is an error
+            error && <Alert variant="filled" severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+            
         </div>
     );
 }

@@ -2,6 +2,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase.js";
 import { useNavigate } from "react-router-dom";
 import styles from './Login.module.css';
+import TextField from '@mui/material/TextField';
+
 
 
 function Login() {
@@ -33,12 +35,28 @@ function Login() {
             <form onSubmit={handleLogin} className={styles["login-form"]}>
                 <label className={styles["login-label"]}>
                     Email:
-                    <input type="email" name="email" required placeholder="Enter Email"/>
+                    <div>
+                        <br />
+                        <TextField
+                        required
+                        id="outlined-required"
+                        label="Required"
+                        defaultValue="Enter Email"
+                        />
+                    </div>
                 </label>
                 <br />
                 <label className={styles["login-label"]}>
                     Password:
-                    <input type="password" name="password" required placeholder="Enter Password"/>
+                    <div>
+                        <br />
+                        <TextField
+                        required
+                        id="outlined-required"
+                        label="Required"
+                        defaultValue="Enter Password"
+                        />
+                    </div>
                 </label>
                 <br />
                 <button type="submit">Login</button>
