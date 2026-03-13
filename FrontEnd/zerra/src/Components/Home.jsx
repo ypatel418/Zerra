@@ -6,7 +6,7 @@ function Home() {
 
     const navigate = useNavigate();
 
-    const acitivateBackend = async () => {
+    const activateBackend = async () => {
         try {
             await fetch(`${import.meta.env.VITE_API_URL}/files/`);
         } catch (e) {
@@ -16,7 +16,7 @@ function Home() {
 
     // Activate the backend when the home page loads
     useEffect(() => {
-        acitivateBackend();
+        activateBackend();
     }, []);
 
     return(
