@@ -34,7 +34,7 @@ public class FileController {
     @Autowired
     private FileService services;
 
-    @GetMapping("/")
+    @GetMapping({ "", "/" })
     public ResponseEntity<String> testEndpoint() {
         return ResponseEntity.ok("");
     }
