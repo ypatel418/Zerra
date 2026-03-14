@@ -43,6 +43,8 @@ function Login() {
                         id="email"
                         label="Email"
                         placeholder="Enter Email"
+                        type="email"
+                        autoComplete="email"
                         />
                     </div>
                 </label>
