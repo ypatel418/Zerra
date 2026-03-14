@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +18,13 @@ import com.jash.zerra.service.UserService;
 @CrossOrigin(origins = { "http://localhost:5173", "https://zerra-five.vercel.app" })
 public class UserController {
 
+    private final FileController fileController;
     @Autowired
     private UserService service;
+
+    UserController(FileController fileController) {
+        this.fileController = fileController;
+    }
 
     // Needs to be changed to accept firebase UID and email from frontend
     @PostMapping("/register")
@@ -30,6 +36,16 @@ public class UserController {
             System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
+    @GetMapping("/activate")
+    public ResponseEntity<String> activate() {
+        /*
+            Since free hosting services put the backend to sleep after a period of inactivity,
+            this endpoint is used to wake up the backend when someone accesses the front end.
+            We have an issue that if a user makes an account too fast, they're info won't
+            be added into the database. Hopefully this will fix that problem!
+        */
+        return new ResponseEntity<>("Activated", HttpStatus.OK);
     }
 }

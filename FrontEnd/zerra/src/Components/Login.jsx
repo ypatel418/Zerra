@@ -63,6 +63,16 @@ function Login() {
                 </label>
                 <br />
                 <button type="submit">Login</button>
+                
+                {/* Add a button to navigate to the register page */}
+                <button type="button" onClick={() => navigate("/register")}>
+                    Don't have an account?
+                </button>
+
+                {/* Add a button to navigate to the forgot password page */}
+                <button type="button" onClick={() => navigate("/reset-password")}>
+                    Forgot Password?
+                </button>
             </form>
         </div>
 

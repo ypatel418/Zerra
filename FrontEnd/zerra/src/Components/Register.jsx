@@ -13,6 +13,7 @@ function Register() {
     // Creates a navigate hook to redirect the user to the home page
     const navigate = useNavigate();
     const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
 
     const getFriendlyErrorMessage = (error) => {
         if (!error) {
@@ -75,10 +76,12 @@ function Register() {
                 email: user.email,
                 id: user.uid
             });
-            alert("Account Created Successfully!");
-
-            // Redirect to home page
-            navigate("/");
+            setSuccess("Account created successfully! Redirecting to home page...");
+            
+            // Redirect to home page after 2 seconds
+            setTimeout(() => {
+                navigate("/");
+            }, 4000);
         } catch (e) {
             const friendlyMessage = getFriendlyErrorMessage(e);
             setError(friendlyMessage);
@@ -120,6 +123,8 @@ function Register() {
 
             {/* sets the error state to an alert if there is an error */}
             {error && <Alert variant="filled" severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+            {/* sets the success state to an alert if there is a success */}
+            {success && <Alert variant="filled" severity="success" sx={{ mt: 2 }}>{success}</Alert>}
 
         </div>
     );
