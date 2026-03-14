@@ -78,7 +78,7 @@ function Register() {
             });
             setSuccess("Account created successfully! Redirecting to home page...");
             
-            // Redirect to home page after 2 seconds
+            // Redirect to home page after 4 seconds
             setTimeout(() => {
                 navigate("/");
             }, 4000);
