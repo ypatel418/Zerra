@@ -39,9 +39,10 @@ function Login() {
                         <br />
                         <TextField
                         required
-                        id="outlined-required"
-                        label="Required"
-                        defaultValue="Enter Email"
+                        name="email"
+                        id="email"
+                        label="Email"
+                        placeholder="Enter Email"
                         />
                     </div>
                 </label>
@@ -52,9 +53,11 @@ function Login() {
                         <br />
                         <TextField
                         required
-                        id="outlined-required"
-                        label="Required"
-                        defaultValue="Enter Password"
+                        name="password"
+                        id="password"
+                        label="Password"
+                        type="password"
+                        placeholder="Enter Password"
                         />
                     </div>
                 </label>

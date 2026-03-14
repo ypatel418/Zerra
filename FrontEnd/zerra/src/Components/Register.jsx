@@ -14,6 +14,27 @@ function Register() {
     const navigate = useNavigate();
     const [error, setError] = useState(null);
 
+    const getFriendlyErrorMessage = (error) => {
+        if (!error) {
+            return "An unexpected error occurred. Please try again.";
+        }
+        if (error.code) {
+            switch (error.code) {
+                case "auth/email-already-in-use":
+                    return "This email is already in use. Please use a different email or sign in instead.";
+                case "auth/invalid-email":
+                    return "The email address you entered is not valid. Please check it and try again.";
+                case "auth/weak-password":
+                    return "Your password is too weak. Please choose a stronger password.";
+                case "auth/network-request-failed":
+                    return "A network error occurred. Please check your internet connection and try again.";
+                default:
+                    return "We couldn't create your account. Please try again.";
+            }
+        }
+        return "We couldn't create your account. Please try again.";
+    };
+
     const handleRegister = async (e) => {
         e.preventDefault();
         setError(null);
@@ -50,7 +71,7 @@ function Register() {
             
             // Sends a POST request to the backend to create a new user
             // Sends the email and UID in the request body
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/register`, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}users/register`, {
                 email: user.email,
                 id: user.uid
             });
@@ -59,7 +80,8 @@ function Register() {
             // Redirect to home page
             navigate("/");
         } catch (e) {
-            setError(e.message);
+            const friendlyMessage = getFriendlyErrorMessage(e);
+            setError(friendlyMessage);
         }
 
     }
@@ -73,32 +95,32 @@ function Register() {
                 <TextField
                     required
                     name="email"
-                    id="outlined-required"
-                    label="Required"
+                    id="email"
+                    label="Email"
                     type="email"
                 />
                 <label htmlFor="password">Password:</label>
                 <TextField
                     required
                     name="password"
-                    id="outlined-required"
-                    label="Required"
+                    id="password"
+                    label="Password"
                     type="password"
                 />
                 <label htmlFor="confirmPassword">Confirm Password:</label>
                 <TextField
                     required
                     name="confirmPassword"
-                    id="outlined-required"
-                    label="Required"
+                    id="confirmPassword"
+                    label="Confirm Password"
                     type="password"
                 />
                 <button type="submit">Register</button>
             </form>
 
-            { // sets the error state to an alert if there is an error
-            error && <Alert variant="filled" severity="error" sx={{ mt: 2 }}>{error}</Alert>}
-            
+            {/* sets the error state to an alert if there is an error */}
+            {error && <Alert variant="filled" severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+
         </div>
     );
 }
