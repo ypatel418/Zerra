@@ -39,7 +39,7 @@ public class UserController {
         /*
             Since free hosting services put the backend to sleep after a period of inactivity,
             this endpoint is used to wake up the backend when someone accesses the front end.
-            We have an issue that if a user makes an account too fast, they're info won't
+            We have an issue that if a user makes an account too fast, their info won't
             be added into the database. Hopefully this will fix that problem!
         */
         return new ResponseEntity<>("Activated", HttpStatus.OK);
