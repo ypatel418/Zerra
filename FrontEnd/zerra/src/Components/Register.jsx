@@ -39,6 +39,7 @@ function Register() {
     const handleRegister = async (e) => {
         e.preventDefault();
         setError(null);
+        setSuccess(null);
         
         const email = e.target.email.value;
         const password = e.target.password.value;
