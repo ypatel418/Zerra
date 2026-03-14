@@ -18,13 +18,9 @@ import com.jash.zerra.service.UserService;
 @CrossOrigin(origins = { "http://localhost:5173", "https://zerra-five.vercel.app" })
 public class UserController {
 
-    private final FileController fileController;
     @Autowired
     private UserService service;
-
-    UserController(FileController fileController) {
-        this.fileController = fileController;
-    }
+    
 
     // Needs to be changed to accept firebase UID and email from frontend
     @PostMapping("/register")
