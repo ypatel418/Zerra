@@ -8,7 +8,7 @@ function Home() {
 
     const activateBackend = async () => {
         try {
-            await fetch(`${import.meta.env.VITE_API_URL}users/activate`);
+            await fetch(`${import.meta.env.VITE_API_URL}/users/activate`);
         } catch (e) {
             console.error("Error activating backend:", e);
         }
