@@ -5,7 +5,7 @@ import axios from 'axios';
 import NavBar from './NavBar';
 import SharingPopup from './SharingPopup'
 import { auth } from "../firebase.js";
-import FileTable from './fileTable.jsx';
+import FileTable from './FileTable.jsx';
 
 function Dashboard() {
 
@@ -56,14 +56,6 @@ function Dashboard() {
     }
   };
 
-  const deleteFile = async (index) => {
-    try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/files/delete/${files[index].id}`);
-      setFiles(files.filter((_, i) => i !== index));
-    } catch (error) {
-      console.error('Error deleting file:', error);
-    }
-  };
 
   const handleChange = async (value) => {
     setInput(value);
@@ -84,28 +76,6 @@ function Dashboard() {
       setNoResult(false);
     }
   };
-
-  async function handleDownloadFile(index) {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/files/download/${files[index].id}`,
-        { responseType: 'blob' }
-      );
-
-      const url = window.URL.createObjectURL(response.data);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = files[index].originalFileName;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-
-    } catch (err) {
-      console.error("Download failed:", err);
-      alert("Failed to download file");
-    }
-  }
 
   const handleFileChange = (e) => {
     setSelectFile(e.target.files[0]);
@@ -178,13 +148,7 @@ function Dashboard() {
                 </div>
               )}
             </div>
-
-            {files.map((element,index) => (
-              {
-                fileName: element.originalFileName, 
-                owner: "testing", 
-              }
-            ))}
+            
             <FileTable rows={files}/>
             {/* <div className={styles["file-list"]}>
               <div className={styles["files-header"]}>
