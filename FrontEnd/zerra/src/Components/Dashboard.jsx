@@ -5,6 +5,7 @@ import axios from 'axios';
 import NavBar from './NavBar';
 import SharingPopup from './SharingPopup'
 import { auth } from "../firebase.js";
+import FileTable from './fileTable.jsx';
 
 function Dashboard() {
 
@@ -178,7 +179,14 @@ function Dashboard() {
               )}
             </div>
 
-            <div className={styles["file-list"]}>
+            {files.map((element,index) => (
+              {
+                fileName: element.originalFileName, 
+                owner: "testing", 
+              }
+            ))}
+            <FileTable rows={files}/>
+            {/* <div className={styles["file-list"]}>
               <div className={styles["files-header"]}>
                 <span>File Name</span>
                 <span>Owner</span>
@@ -196,7 +204,7 @@ function Dashboard() {
                   <hr className={styles["hr-list"]}/>
                 </>
               ))}
-            </div>
+            </div> */}
           </div>
       </div>
       </div>
