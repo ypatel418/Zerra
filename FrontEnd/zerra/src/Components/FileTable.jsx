@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import { DataGrid } from "@mui/x-data-grid";
@@ -94,7 +93,7 @@ const FileTable = (props) => {
 
 
   return (
-    <Paper sx={{ height: 600, width: "100%" }}>
+    <Paper sx={{ height: 600, width: "100%", paddingTop: "70px" }}>
       <DataGrid
         rows={rows}
         columns={columns}

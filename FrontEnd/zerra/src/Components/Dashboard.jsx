@@ -3,14 +3,11 @@ import { useLocation } from 'react-router-dom';
 import styles from './Dashboard.module.css';
 import axios from 'axios';
 import NavBar from './NavBar';
-import SharingPopup from './SharingPopup'
-import { auth } from "../firebase.js";
 import FileTable from './FileTable.jsx';
 
 function Dashboard() {
 
   const [files, setFiles] = useState([]);
-  const [selectFile, setSelectFile] = useState(null);
   const [showSearchResults, setShowSearchResults] = useState(false)
   const [input, setInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -39,24 +36,6 @@ function Dashboard() {
     fetchFiles();
   }, [isSharedPage]);
 
-  const uploadFile = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/files/upload/${localStorage.getItem("userId")}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-      setFiles(f => [...f, response.data]);
-      setSelectFile(null);
-    } catch (error) {
-      console.error('Error uploading file:', error);
-    }
-  };
-
-
   const handleChange = async (value) => {
     setInput(value);
     if(value.length >= 1) {
@@ -77,39 +56,16 @@ function Dashboard() {
     }
   };
 
-  const handleFileChange = (e) => {
-    setSelectFile(e.target.files[0]);
-  }
 
-  const handleUploadClick = () => {
-    if (!selectFile){
-      alert("Please select a file to upload.");
-      return;
-    }
-    uploadFile(selectFile);
+  function handleUpload(file) {
+    setFiles(f => [...f, file]);
   }
-
-  function isOwner(email) {
-    if (email === auth.currentUser.email) {
-      return 'Me'
-    } else {
-      return email
-    }
-  }
-
   return (
     <>
     <div className={styles.wrapper}>
-      <NavBar/>
+      <NavBar handleUpload={handleUpload}/>
       <div className={styles["dashboard-container"]}>
         <h1>Dashboard</h1>
-          <div className={styles["sidebar"]}>
-            <input 
-              type="file" 
-              onChange={handleFileChange}
-            />
-            <button onClick={handleUploadClick}>Upload File</button>
-          </div>
 
           <div className={styles["main-content"]}>
 
@@ -150,25 +106,6 @@ function Dashboard() {
             </div>
             
             <FileTable rows={files}/>
-            {/* <div className={styles["file-list"]}>
-              <div className={styles["files-header"]}>
-                <span>File Name</span>
-                <span>Owner</span>
-              </div>
-              <hr className={styles["hr-header"]}/>
-              {files.map((element, index) => (
-                <>
-                  <div key={element.id} className={styles["file-item"]}>
-                    <span>{element.originalFileName}</span>
-                    <span>{isOwner(element.owner.email)}</span>
-                    <button onClick={() => deleteFile(index)}>Delete</button> 
-                    <button onClick={() => handleDownloadFile(index)}>Download</button>
-                    <SharingPopup fileId={element.id}/>
-                  </div>
-                  <hr className={styles["hr-list"]}/>
-                </>
-              ))}
-            </div> */}
           </div>
       </div>
       </div>
