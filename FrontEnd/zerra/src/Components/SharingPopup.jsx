@@ -8,6 +8,8 @@ import DialogContent from '@mui/material/DialogContent';
 import Typography from '@mui/material/Typography';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
+import ShareIcon from '@mui/icons-material/Share';
+import SendIcon from '@mui/icons-material/Send';
 
 
 const SharingPopup = (props) => {
@@ -64,7 +66,11 @@ const SharingPopup = (props) => {
 
   return (
     <div>
-      <Button variant="outlined" onClick={() => toggleDialog()}>Share File</Button>
+      <Button variant="outlined" startIcon={<ShareIcon />} sx={{
+        color: 'rgb(28, 139, 158)', 
+        borderColor: 'rgb(28, 139, 158)'}} onClick={() => toggleDialog()}>
+          Share File
+      </Button>
 
         <Dialog open={open} onClose={() => setOpen(false)}>
           <DialogTitle>Share</DialogTitle>
@@ -72,7 +78,11 @@ const SharingPopup = (props) => {
           <DialogContent>
             <Typography variant='label' htmlFor="email">Email:</Typography>
             <input type="text" id="email" name="email" placeholder="Enter Email" onChange={(e) => setEmail(e.target.value)}/>
-            <button onClick={() => handleShareFile()} className="btn-secondary">Share</button>
+            <Button variant="outlined" endIcon={<SendIcon />} sx={{
+              color: 'rgb(28, 139, 158)', 
+              borderColor: 'rgb(28, 139, 158)'}} onClick={() => handleShareFile()}>
+                Share
+            </Button>
             <br/>
             <br/>
             <Typography>{checkUsers()}</Typography>
@@ -85,7 +95,11 @@ const SharingPopup = (props) => {
           </DialogContent>
 
           <DialogActions>
-            <Button variant="outlined" onClick={() => setOpen(false)}>Close</Button>
+            <Button variant="outlined" sx={{
+              color: 'rgb(28, 139, 158)', 
+              borderColor: 'rgb(28, 139, 158)'}} onClick={() => setOpen(false)}>
+                Close
+            </Button>
           </DialogActions>
         </Dialog>
     </div>

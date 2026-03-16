@@ -5,17 +5,28 @@ import { DataGrid } from "@mui/x-data-grid";
 import SharingPopup from './SharingPopup';
 import axios from 'axios';
 import Button from '@mui/material/Button';
+import { auth } from "../firebase.js";
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import DeletePopup from "./DeletePopup.jsx";
 
 const FileTable = (props) => {
 
   const [rows, setRows] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setCurrentUser(user);
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     setRows(
       props.rows.map((file, _) => ({
         id: file.id,
         fileName: file.originalFileName,
-        owner: file.owner.email
+        owner: (file.owner.email === currentUser?.email) ? "Me" : file.owner.email
       }))
     );
   }, [props.rows]);
@@ -41,15 +52,9 @@ const FileTable = (props) => {
     }
   }
 
-  const deleteFile = async (fileID) => {
-    try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/files/delete/${fileID}`);
-      setRows(rows.filter((element, _) => element.id !== fileID));
-    } catch (error) {
-      console.error('Error deleting file:', error);
-    }
-  };
-
+  function handleDeleteFile(fileID) {
+    setRows(rows.filter((element, _) => element.id !== fileID));
+  }
 
 
   const columns = [
@@ -61,17 +66,15 @@ const FileTable = (props) => {
         headerName: 'Delete',
         width: 150,
         renderCell: (params) => (
-          <Button variant="outlined" color="error" onClick={() => deleteFile(params.row.id)}>
-            Delete
-          </Button>
+          <DeletePopup fileID={params.row.id} onDelete={handleDeleteFile}/>
         )},
 
       { 
         field: 'downloadButton', 
         headerName: 'Download',
-        width: 150,
+        width: 170,
         renderCell: (params) => (
-          <Button variant="outlined" onClick={() => downloadFile(params.row)}>
+          <Button variant="outlined" startIcon={<FileDownloadIcon />} sx={{color: 'rgb(28, 139, 158)', borderColor: 'rgb(28, 139, 158)'}} onClick={() => downloadFile(params.row)}>
             Download
           </Button>
         )},
@@ -79,7 +82,7 @@ const FileTable = (props) => {
       { 
         field: 'share', 
         headerName: 'Share',
-        width: 150,
+        width: 170,
         renderCell: (params) => (
           <SharingPopup fileId={params.row.id}/>
         )}
@@ -91,7 +94,7 @@ const FileTable = (props) => {
 
 
   return (
-    <Paper sx={{ height: 400, width: "100%" }}>
+    <Paper sx={{ height: 600, width: "100%" }}>
       <DataGrid
         rows={rows}
         columns={columns}
