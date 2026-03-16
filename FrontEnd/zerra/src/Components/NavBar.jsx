@@ -67,13 +67,14 @@ const NavBar = ({handleUpload}) => {
                                 <input
                                     type="file"
                                     hidden
-                                    onChange={(e) =>{
-                                        try{
-                                            uploadFile(e.target.files[0]);
-                                        }catch(e) {
-                                            
+                                    onChange={(e) => {
+                                        const file = e.target.files && e.target.files[0];
+                                        if (!file) {
+                                            e.target.value = "";
+                                            return;
                                         }
-                                    } }
+                                        uploadFile(file);
+                                    }}
                                 />
                             </ListItemButton>
                     )} else {
