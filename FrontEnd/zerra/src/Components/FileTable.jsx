@@ -22,13 +22,13 @@ const FileTable = (props) => {
 
   useEffect(() => {
     setRows(
-      props.rows.map((file, _) => ({
+      props.rows.map((file) => ({
         id: file.id,
         fileName: file.originalFileName,
         owner: (file.owner.email === currentUser?.email) ? "Me" : file.owner.email
       }))
     );
-  }, [props.rows]);
+  }, [props.rows, currentUser]);
 
 
   async function downloadFile(file) {
@@ -52,7 +52,7 @@ const FileTable = (props) => {
   }
 
   function handleDeleteFile(fileID) {
-    setRows(rows.filter((element, _) => element.id !== fileID));
+    setRows(rows.filter((element) => element.id !== fileID));
   }
 
 
