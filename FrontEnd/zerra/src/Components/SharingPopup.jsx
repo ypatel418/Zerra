@@ -21,7 +21,8 @@ const SharingPopup = (props) => {
     if (email) {
       
       try{
-        await axios.put(`${import.meta.env.VITE_API_URL}/files/share/${props.fileId}?email=${email}`);
+        const encodedEmail = encodeURIComponent(email);
+        await axios.put(`${import.meta.env.VITE_API_URL}/files/share/${props.fileId}?email=${encodedEmail}`);
         await getSharedUsers();
         } catch(error) {
           console.error("Error sharing file:", error)
@@ -31,7 +32,8 @@ const SharingPopup = (props) => {
 
   async function removeUserShared(email) {
     try{
-      await axios.delete(`${import.meta.env.VITE_API_URL}/files/share/${props.fileId}/${email}`)
+      const encodedEmail = encodeURIComponent(email);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/files/share/${props.fileId}/${encodedEmail}`)
       setUsers(users.filter((element) => element.email !== email))
     }catch(e){
       console.error("Error Removing User", e)
