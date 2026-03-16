@@ -76,7 +76,7 @@ const SharingPopup = (props) => {
           <DialogTitle>Share</DialogTitle>
 
           <DialogContent>
-            <Typography variant='label' htmlFor="email">Email:</Typography>
+            <label htmlFor="email">Email:</label>
             <input type="text" id="email" name="email" placeholder="Enter Email" onChange={(e) => setEmail(e.target.value)}/>
             <Button variant="outlined" endIcon={<SendIcon />} sx={{
               color: 'rgb(28, 139, 158)', 
@@ -88,7 +88,7 @@ const SharingPopup = (props) => {
             <Typography>{checkUsers()}</Typography>
              {users.map((element, _) => (
                   <div key={element.id} className='SharedUsers-List'>
-                    <Typography variant='label' key={element.id}> {element.email} </Typography>
+                    <Typography variant="body2" key={element.id}> {element.email} </Typography>
                     <Button variant="outlined" color="error" onClick={() => removeUserShared(element.email)}> Remove User</Button>
                   </div>
                 ))}
