@@ -1,32 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './SharingPopup.css';
 import axios from 'axios';
 import { auth } from "../firebase.js";
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import Typography from '@mui/material/Typography';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
+
 
 const SharingPopup = (props) => {
-  const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [users, setUsers] = useState([]);
+  const [open, setOpen] = useState(false);
 
-  function handleShareFile() {
+  async function handleShareFile() {
     if (email) {
-      axios.put(`${import.meta.env.VITE_API_URL}/files/share/${props.fileId}?email=${email}`)
-        .then(response => {
-          alert("File shared successfully!");
-        })
-        .catch(error => {
-          console.error("Error sharing file:", error);
-          alert("Failed to share file");
-        });
+      
+      try{
+        await axios.put(`${import.meta.env.VITE_API_URL}/files/share/${props.fileId}?email=${email}`);
+        await getSharedUsers();
+        } catch(error) {
+          console.error("Error sharing file:", error)
+        }
     }
   }
 
-  function removeUserShared(email) {
+  async function removeUserShared(email) {
     try{
-      axios.delete(`${import.meta.env.VITE_API_URL}/files/share/${props.fileId}/${email}`)
-      setUsers(users.filter( (element ,i) => {
-        element.email != email;
-      }))
+      await axios.delete(`${import.meta.env.VITE_API_URL}/files/share/${props.fileId}/${email}`)
+      setUsers(users.filter((element) => element.email !== email))
     }catch(e){
       console.error("Error Removing User", e)
     }
@@ -39,13 +43,14 @@ const SharingPopup = (props) => {
         return element.email !== auth.currentUser.email;
       })
       setUsers(filteredUsers);
+      
     }catch(e){
       console.error("Error fetching Users", e)
     }
   }
 
-  const toggleModal = () => {
-      setIsOpen(!isOpen);
+  function toggleDialog() {
+      setOpen(true);
       getSharedUsers();
   }
 
@@ -58,36 +63,31 @@ const SharingPopup = (props) => {
   }
 
   return (
-    <div className="app-container">
-      <button onClick={toggleModal} className="open-btn">Share File</button>
-      {isOpen && (
-        <div className="modal-overlay" onClick={toggleModal}>
-          {/* stopPropagation stops the window from closing when clicking inside the white box */}
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3>Share File</h3>
-              <button className="close-x" onClick={toggleModal}>&times;</button>
-            </div>
-            <div className="modal-body">
-              <label htmlFor="email">Email:</label>
-              <input type="text" id="email" name="email" placeholder="Enter Email" onChange={(e) => setEmail(e.target.value)}/>
-              <button onClick={ () => handleShareFile()} className="btn-secondary">Share</button>    
-              <h4 className='SharedUsers-Header'>{checkUsers()} </h4>
-              <div className="SharedUsers-List">
-                {users.map((element, index) => (
-                  <>
-                    <ol key={element.id}> {element.email} </ol>
-                    <button onClick={() => removeUserShared(element.email)}> Remove User</button>
-                  </>
+    <div>
+      <Button variant="outlined" onClick={() => toggleDialog()}>Share File</Button>
+
+        <Dialog open={open} onClose={() => setOpen(false)}>
+          <DialogTitle>Share</DialogTitle>
+
+          <DialogContent>
+            <Typography variant='label' htmlFor="email">Email:</Typography>
+            <input type="text" id="email" name="email" placeholder="Enter Email" onChange={(e) => setEmail(e.target.value)}/>
+            <button onClick={() => handleShareFile()} className="btn-secondary">Share</button>
+            <br/>
+            <br/>
+            <Typography>{checkUsers()}</Typography>
+             {users.map((element, _) => (
+                  <div key={element.id} className='SharedUsers-List'>
+                    <Typography variant='label' key={element.id}> {element.email} </Typography>
+                    <Button variant="outlined" color="error" onClick={() => removeUserShared(element.email)}> Remove User</Button>
+                  </div>
                 ))}
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button className="btn-primary" onClick={toggleModal}>Done</button>
-            </div>
-          </div>
-        </div>
-      )}
+          </DialogContent>
+
+          <DialogActions>
+            <Button variant="outlined" onClick={() => setOpen(false)}>Close</Button>
+          </DialogActions>
+        </Dialog>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import Paper from "@mui/material/Paper";
 import { DataGrid } from "@mui/x-data-grid";
 import SharingPopup from './SharingPopup';
 import axios from 'axios';
+import Button from '@mui/material/Button';
 
 const FileTable = (props) => {
 
@@ -60,9 +61,9 @@ const FileTable = (props) => {
         headerName: 'Delete',
         width: 150,
         renderCell: (params) => (
-          <button onClick={() => deleteFile(params.row.id)}>
+          <Button variant="outlined" color="error" onClick={() => deleteFile(params.row.id)}>
             Delete
-          </button>
+          </Button>
         )},
 
       { 
@@ -70,9 +71,9 @@ const FileTable = (props) => {
         headerName: 'Download',
         width: 150,
         renderCell: (params) => (
-          <button onClick={() => downloadFile(params.row)}>
+          <Button variant="outlined" onClick={() => downloadFile(params.row)}>
             Download
-          </button>
+          </Button>
         )},
       
       { 
