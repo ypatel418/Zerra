@@ -4,36 +4,64 @@ import { auth } from "../firebase.js";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from './Register.module.css';
+import TextField from '@mui/material/TextField';
+import Alert from '@mui/material/Alert';
+
 
 function Register() {
 
     // Creates a navigate hook to redirect the user to the home page
     const navigate = useNavigate();
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
+
+    const getFriendlyErrorMessage = (error) => {
+        if (!error) {
+            return "An unexpected error occurred. Please try again.";
+        }
+        if (error.code) {
+            switch (error.code) {
+                case "auth/email-already-in-use":
+                    return "This email is already in use. Please use a different email or sign in instead.";
+                case "auth/invalid-email":
+                    return "The email address you entered is not valid. Please check it and try again.";
+                case "auth/weak-password":
+                    return "Your password is too weak. Please choose a stronger password.";
+                case "auth/network-request-failed":
+                    return "A network error occurred. Please check your internet connection and try again.";
+                default:
+                    return "We couldn't create your account. Please try again.";
+            }
+        }
+        return "We couldn't create your account. Please try again.";
+    };
 
     const handleRegister = async (e) => {
         e.preventDefault();
+        setError(null);
+        setSuccess(null);
         
         const email = e.target.email.value;
         const password = e.target.password.value;
         const confirmPassword = e.target.confirmPassword.value;
         
         if (password !== confirmPassword) {
-            alert("Passwords do not match!");
+            setError("Passwords do not match!");
             return;
         }
 
         if(password.length < 8) {
-            alert("Password should be at least 8 characters long!");
+            setError("Password should be at least 8 characters long!");
             return;
         }
 
         if(!/[A-Z]/.test(password)) {
-            alert("Password should contain at least one uppercase letter!");
+            setError("Password should contain at least one uppercase letter!");
             return;
         }
 
         if(!/[0-9]/.test(password)) {
-            alert("Password should contain at least one number!");
+            setError("Password should contain at least one number!");
             return;
         }
 
@@ -49,12 +77,15 @@ function Register() {
                 email: user.email,
                 id: user.uid
             });
-            alert("Account Created Successfully!");
-
-            // Redirect to home page
-            navigate("/");
+            setSuccess("Account created successfully! Redirecting to home page...");
+            
+            // Redirect to home page after 4 seconds
+            setTimeout(() => {
+                navigate("/");
+            }, 4000);
         } catch (e) {
-            alert(e.message);
+            const friendlyMessage = getFriendlyErrorMessage(e);
+            setError(friendlyMessage);
         }
 
     }
@@ -65,13 +96,37 @@ function Register() {
             <p>Password must be at least 8 characters long, contain at least one uppercase letter, and one number.</p>
             <form onSubmit={handleRegister} className={styles["register-form"]}>
                 <label htmlFor="email">Email:</label>
-                <input type="email" name="email" placeholder="Enter Email" required /> <br />
+                <TextField
+                    required
+                    name="email"
+                    id="email"
+                    label="Email"
+                    type="email"
+                />
                 <label htmlFor="password">Password:</label>
-                <input type="password" name="password" placeholder="Enter Password" required /> <br />
+                <TextField
+                    required
+                    name="password"
+                    id="password"
+                    label="Password"
+                    type="password"
+                />
                 <label htmlFor="confirmPassword">Confirm Password:</label>
-                <input type="password" name="confirmPassword" placeholder="Confirm Password" required /> <br />
+                <TextField
+                    required
+                    name="confirmPassword"
+                    id="confirmPassword"
+                    label="Confirm Password"
+                    type="password"
+                />
                 <button type="submit">Register</button>
             </form>
+
+            {/* sets the error state to an alert if there is an error */}
+            {error && <Alert variant="filled" severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+            {/* sets the success state to an alert if there is a success */}
+            {success && <Alert variant="filled" severity="success" sx={{ mt: 2 }}>{success}</Alert>}
+
         </div>
     );
 }

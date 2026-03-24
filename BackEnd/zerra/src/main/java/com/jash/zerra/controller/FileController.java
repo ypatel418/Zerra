@@ -34,6 +34,11 @@ public class FileController {
     @Autowired
     private FileService services;
 
+    @GetMapping({ "", "/" })
+    public ResponseEntity<String> testEndpoint() {
+        return ResponseEntity.ok("");
+    }
+
     @GetMapping("/{UserID}")
     public ResponseEntity<List<File>> getAllFiles(@PathVariable String UserID) {
         List<File> files = services.getAllFiles(UserID);
