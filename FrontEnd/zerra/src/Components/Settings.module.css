@@ -1,0 +1,29 @@
+.wrapper {
+  display: flex;
+  gap: 24px;
+}
+
+.content {
+  width: 100%;
+  max-width: 760px;
+  padding: 32px 24px 40px 0;
+}
+
+.card {
+  padding: 24px;
+}
+
+.form {
+  display: grid;
+  gap: 14px;
+}
+
+.divider {
+  margin: 20px 0;
+}
+
+@media (max-width: 900px) {
+  .content {
+    padding-right: 16px;
+  }
+}

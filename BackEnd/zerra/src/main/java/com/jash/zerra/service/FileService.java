@@ -22,7 +22,15 @@ public class FileService {
     private UserRepo userRepo;
 
     public List<File> getAllFiles(String UserID) {
-        return repo.findByOwnerId(UserID);
+        List<File> files = repo.findByOwnerId(UserID);
+
+        // Remove all large aspects of file data to reduce payload size
+        // There is also already  a download file API endpoint so we do not need the data in the list of files
+        for (File file : files) {
+            file.setData(null);
+        }
+
+        return files;
     }
 
     public File uploadFile(MultipartFile file, String userID) {
