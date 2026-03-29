@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.jash.zerra.dto.FileDTO;
 import com.jash.zerra.model.File;
 import com.jash.zerra.model.User;
 import com.jash.zerra.service.FileService;
@@ -40,15 +41,15 @@ public class FileController {
     }
 
     @GetMapping("/{UserID}")
-    public ResponseEntity<List<File>> getAllFiles(@PathVariable String UserID) {
-        List<File> files = services.getAllFiles(UserID);
+    public ResponseEntity<List<FileDTO>> getAllFiles(@PathVariable String UserID) {
+        List<FileDTO> files = services.getAllFiles(UserID);
         files.addAll(services.getSharedFiles(UserID));
         return ResponseEntity.ok(files);
     }
 
     @GetMapping("/share/{UserID}")
-    public ResponseEntity<List<File>> getSharedFiles(@PathVariable String UserID) {
-        List<File> files = services.getSharedFiles(UserID);
+    public ResponseEntity<List<FileDTO>> getSharedFiles(@PathVariable String UserID) {
+        List<FileDTO> files = services.getSharedFiles(UserID);
         return ResponseEntity.ok(files);
     }
 

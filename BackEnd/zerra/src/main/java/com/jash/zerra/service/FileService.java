@@ -3,11 +3,13 @@ package com.jash.zerra.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.jash.zerra.dto.FileDTO;
 import com.jash.zerra.model.File;
 import com.jash.zerra.model.User;
 import com.jash.zerra.repo.FileRepo;
@@ -21,16 +23,9 @@ public class FileService {
     @Autowired
     private UserRepo userRepo;
 
-    public List<File> getAllFiles(String UserID) {
+    public List<FileDTO> getAllFiles(String UserID) {
         List<File> files = repo.findByOwnerId(UserID);
-
-        // Remove all large aspects of file data to reduce payload size
-        // There is also already  a download file API endpoint so we do not need the data in the list of files
-        for (File file : files) {
-            file.setData(null);
-        }
-
-        return files;
+        return files.stream().map(FileDTO::new).collect(Collectors.toList());
     }
 
     public File uploadFile(MultipartFile file, String userID) {
@@ -74,8 +69,9 @@ public class FileService {
 
     }
 
-    public List<File> getSharedFiles(String userID) {
-        return repo.findBySharedWithId(userID);
+    public List<FileDTO> getSharedFiles(String userID) {
+        List<File> files = repo.findBySharedWithId(userID);
+        return files.stream().map(FileDTO::new).collect(Collectors.toList());
     }
 
     public void removeShared(Long id, String email) {
