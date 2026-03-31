@@ -6,7 +6,7 @@ Although Zerra has a small set of user features for now, we are planning on addi
 
 The current deployment of Zerra is on fly.io for the backend, and Vercel for the frontend.
 
-[Click Here](https://zerra-five.vercel.app/dashboard) to visit Zerra!
+[Click Here](https://zerra-five.vercel.app/) to visit Zerra!
 ## Features
 
 - Ability to share files with other users
