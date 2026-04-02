@@ -12,7 +12,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 
-const NavBar = ({handleUpload}) => {
+const NavBar = ({ handleUpload = () => {} }) => {
     const location = useLocation();
 
     const DRAWER_WIDTH = 240;
