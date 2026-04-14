@@ -89,7 +89,7 @@ const FileTable = (props) => {
 
 
 
-  const paginationModel = { page: 0, pageSize: 5 };
+  const paginationModel = { page: 0, pageSize: 10 };
 
 
   return (

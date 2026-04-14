@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,5 +44,16 @@ public class UserController {
             be added into the database. Hopefully this will fix that problem!
         */
         return new ResponseEntity<>("Activated", HttpStatus.OK);
+    }
+
+    @GetMapping("/{userID}/storage")
+    public ResponseEntity<Long> getUserStorageUsage(@PathVariable String userID) {
+        try {
+            Long storageUsage = service.getUserStorageUsage(userID);
+            return new ResponseEntity<>(storageUsage, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
