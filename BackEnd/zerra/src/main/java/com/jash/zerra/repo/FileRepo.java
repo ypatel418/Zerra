@@ -14,6 +14,9 @@ public interface FileRepo extends JpaRepository<File, Long> {
 
         public List<File> findByOwnerId(String userId);
 
+        @Query("SELECT COALESCE(SUM(f.fileSize), 0) FROM File f WHERE f.owner.id = :userID")
+        Long sumFileSizeByOwnerId(@Param("userID") String userID);
+
         @Query("SELECT f FROM File f " +
                         "WHERE f.owner.id = :userID " +
                         "AND (LOWER(f.storedFileName) LIKE LOWER(CONCAT('%', :keyword, '%')) " +

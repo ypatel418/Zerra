@@ -1,7 +1,5 @@
 package com.jash.zerra.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,16 +22,8 @@ public class UserService {
     }
 
     public Long getUserStorageUsage(String userID) {
-        // Count all file bytes of the user and return it
-        List<File> files = fileRepo.findByOwnerId(userID);
-        Long storageUsage = 0L;
-
-        for (File file : files) {
-            if (file.getFileSize() != null) {
-                storageUsage += file.getFileSize();
-            }
-        }
-        return storageUsage;
+        // Sum file sizes in the database without loading blob data
+        return fileRepo.sumFileSizeByOwnerId(userID);
     }
 
     public boolean userMaxStorageReached(String userID, File uploadedFile) {
