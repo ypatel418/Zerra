@@ -155,7 +155,7 @@ const NavBar = ({ handleUpload = () => {} }) => {
                         backgroundColor: '#E9EEF5',
                         '& .MuiLinearProgress-bar': {
                             borderRadius: 5,
-                            backgroundColor: '#1A73E8',
+                            backgroundColor: 'rgb(28, 139, 158)',
                         },
                     }}
                 />
