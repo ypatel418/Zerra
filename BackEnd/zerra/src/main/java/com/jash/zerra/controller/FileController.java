@@ -25,6 +25,7 @@ import com.jash.zerra.dto.FileDTO;
 import com.jash.zerra.model.File;
 import com.jash.zerra.model.User;
 import com.jash.zerra.service.FileService;
+import com.jash.zerra.service.UserService;
 
 // Allow requests from the frontend server
 @CrossOrigin(origins = { "http://localhost:5173", "https://zerra-five.vercel.app" })
@@ -34,6 +35,9 @@ public class FileController {
 
     @Autowired
     private FileService services;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping({ "", "/" })
     public ResponseEntity<String> testEndpoint() {
@@ -56,8 +60,13 @@ public class FileController {
     @PostMapping("/upload/{userID}")
     public ResponseEntity<File> uploadFile(@RequestPart MultipartFile file, @PathVariable String userID) {
         try {
+            if(userService.userMaxStorageReached(userID)) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+
             File savedFile = services.uploadFile(file, userID);
             return new ResponseEntity<>(savedFile, HttpStatus.OK);
+            
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

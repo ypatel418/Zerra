@@ -93,13 +93,13 @@ const FileTable = (props) => {
 
 
   return (
-    <Paper sx={{ height: 600, width: "100%", paddingTop: "70px" }}>
+    <Paper sx={{ height: "100%", width: "100%", paddingTop: 0, borderRadius: 2, overflow: "hidden" }}>
       <DataGrid
         rows={rows}
         columns={columns}
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}
-        sx={{ border: 0 }}
+        sx={{ border: 0, height: "100%" }}
       />
     </Paper>
   );

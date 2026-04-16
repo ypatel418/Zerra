@@ -8,10 +8,7 @@ import FileTable from './FileTable.jsx';
 function Dashboard() {
 
   const [files, setFiles] = useState([]);
-  const [showSearchResults, setShowSearchResults] = useState(false)
   const [input, setInput] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [noResult, setNoResult] = useState(false);
 
   const location = useLocation();
   const isSharedPage = location.pathname === '/shared';
@@ -36,25 +33,18 @@ function Dashboard() {
     fetchFiles();
   }, [isSharedPage]);
 
-  const handleChange = async (value) => {
+  const handleChange = (value) => {
     setInput(value);
-    if(value.length >= 1) {
-      setShowSearchResults(true);
-      try {
-        const response =await axios.get(`${import.meta.env.VITE_API_URL}/files/search/${localStorage.getItem("userId")}?keyword=${value}`);
-        setSearchResults(response.data);
-        setNoResult(response.data.length === 0);
-      }
-      catch (error) {
-        console.error('Error searching files:', error);
-      }
-    }
-    else {
-      setShowSearchResults(false);
-      setSearchResults([]);
-      setNoResult(false);
-    }
   };
+
+  const normalizedSearch = input.trim().toLowerCase();
+  const filteredFiles = normalizedSearch
+    ? files.filter((file) => {
+        const fileName = file.originalFileName?.toLowerCase() || "";
+        const ownerEmail = file.owner?.email?.toLowerCase() || "";
+        return fileName.includes(normalizedSearch) || ownerEmail.includes(normalizedSearch);
+      })
+    : files;
 
 
   function handleUpload(file) {
@@ -76,36 +66,10 @@ function Dashboard() {
                 placeholder='Search files...'
                 value={input}
                 onChange={(e) => handleChange(e.target.value)}
-                onFocus={() => input && setShowSearchResults(true)}
-                onBlur={() => {
-                  // Delay hiding search results to allow click events to register
-                  setTimeout(() => setShowSearchResults(false), 200);
-                }}
                 />
-
-              {showSearchResults && (
-                <div className={styles["search-dropdown"]}>
-                  {noResult ? (
-                    <div className={styles["search-result-item"]}>No results found</div>
-                  ) : (
-                    searchResults.map((file) => (
-                      <div
-                        key={file.id}
-                        className={styles["search-result-item"]}
-                        onClick={() => {
-                          setInput(file.originalFileName);
-                          setShowSearchResults(false);
-                        }}
-                      >
-                        {file.originalFileName} - {file.owner.email}
-                      </div>
-                    ))
-                  )}
-                </div>
-              )}
             </div>
             
-            <FileTable rows={files}/>
+            <FileTable rows={filteredFiles}/>
           </div>
       </div>
       </div>

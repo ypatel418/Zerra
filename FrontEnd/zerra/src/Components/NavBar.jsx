@@ -6,6 +6,8 @@ import List from "@mui/material/List";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import LinearProgress from "@mui/material/LinearProgress";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -19,6 +21,7 @@ import axios from 'axios';
 const NavBar = ({ handleUpload = () => {} }) => {
     const location = useLocation();
     const [storageUsageBytes, setStorageUsageBytes] = useState(0);
+    const [uploadError, setUploadError] = useState("");
 
     const DRAWER_WIDTH = 240;
     const MAX_STORAGE_BYTES = 100 * 1024 * 1024;
@@ -31,7 +34,29 @@ const NavBar = ({ handleUpload = () => {} }) => {
         { label: 'Logout', path: '/', icon: <LogoutIcon sx={{ color: 'error.main' }} />, onClick: () => auth.signOut().then(() => localStorage.removeItem("userId")).catch((error) => alert(error.message)) }
     ];
 
+    const handleCloseUploadError = (_, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setUploadError("");
+    };
+
     async function uploadFile(file) {
+        setUploadError("");
+
+        const latestUsage = await getUserStorageUsage();
+        if (latestUsage === null) {
+            setUploadError("Upload failed. Please try again.");
+            return;
+        }
+        setStorageUsageBytes(latestUsage);
+
+        const remainingBytes = Math.max(MAX_STORAGE_BYTES - latestUsage, 0);
+        if (file.size > remainingBytes) {
+            setUploadError("Upload failed: This file exceeds your remaining storage.");
+            return;
+        }
+
         const formData = new FormData();
         formData.append('file', file);
         try {
@@ -41,11 +66,21 @@ const NavBar = ({ handleUpload = () => {} }) => {
         },
         });
         handleUpload(response.data);
-        const latestUsage = await getUserStorageUsage();
-        if (latestUsage !== null) {
-            setStorageUsageBytes(latestUsage);
+        const updatedUsage = await getUserStorageUsage();
+        if (updatedUsage !== null) {
+            setStorageUsageBytes(updatedUsage);
         }
         } catch (error) {
+        if (axios.isAxiosError(error)) {
+            const status = error.response?.status;
+            const message = typeof error.response?.data === 'string' ? error.response.data : '';
+
+            if (status === 409 || status === 413 || message.toLowerCase().includes('size')) {
+                setUploadError("Upload failed: you exceeded your 100 MB storage limit.");
+                return;
+            }
+        }
+        setUploadError("Upload failed. Please try again.");
         console.error('Error uploading file:', error);
         }
     };
@@ -113,7 +148,9 @@ const NavBar = ({ handleUpload = () => {} }) => {
                                             e.target.value = "";
                                             return;
                                         }
-                                        uploadFile(file);
+                                        uploadFile(file).finally(() => {
+                                            e.target.value = "";
+                                        });
                                     }}
                                 />
                             </ListItemButton>
@@ -163,6 +200,22 @@ const NavBar = ({ handleUpload = () => {} }) => {
                     {`${usedPercent.toFixed(1)}% used - ${remainingMegabytes.toFixed(2)} MB left`}
                 </Typography>
             </Box>
+
+            <Snackbar
+                open={Boolean(uploadError)}
+                autoHideDuration={5000}
+                onClose={handleCloseUploadError}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert
+                    onClose={handleCloseUploadError}
+                    severity="error"
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    {uploadError}
+                </Alert>
+            </Snackbar>
         </Drawer>
     );
 }
