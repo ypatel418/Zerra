@@ -42,7 +42,16 @@ const NavBar = ({ handleUpload = () => {} }) => {
     };
 
     async function uploadFile(file) {
-        const remainingBytes = Math.max(MAX_STORAGE_BYTES - storageUsageBytes, 0);
+        setUploadError("");
+
+        const latestUsage = await getUserStorageUsage();
+        if (latestUsage === null) {
+            setUploadError("Upload failed. Please try again.");
+            return;
+        }
+        setStorageUsageBytes(latestUsage);
+
+        const remainingBytes = Math.max(MAX_STORAGE_BYTES - latestUsage, 0);
         if (file.size > remainingBytes) {
             setUploadError("Upload failed: This file exceeds your remaining storage.");
             return;
@@ -57,9 +66,9 @@ const NavBar = ({ handleUpload = () => {} }) => {
         },
         });
         handleUpload(response.data);
-        const latestUsage = await getUserStorageUsage();
-        if (latestUsage !== null) {
-            setStorageUsageBytes(latestUsage);
+        const updatedUsage = await getUserStorageUsage();
+        if (updatedUsage !== null) {
+            setStorageUsageBytes(updatedUsage);
         }
         } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -139,7 +148,9 @@ const NavBar = ({ handleUpload = () => {} }) => {
                                             e.target.value = "";
                                             return;
                                         }
-                                        uploadFile(file);
+                                        uploadFile(file).finally(() => {
+                                            e.target.value = "";
+                                        });
                                     }}
                                 />
                             </ListItemButton>
