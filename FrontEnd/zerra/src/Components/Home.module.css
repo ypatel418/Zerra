@@ -1,86 +1,154 @@
-body{
-    margin: 0;
-    font-family: Arial, sans-serif;
+:root {
+  --brand-teal: rgb(28, 139, 158);
+  --brand-wheat: wheat;
+  --text-dark: #2f2f2f;
+  --surface: #fff;
+  --surface-muted: #f8f8f8;
 }
 
 .home-container {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
-  background-color: wheat;
+  padding: clamp(1.25rem, 2.4vw, 2.5rem);
+  background:
+    radial-gradient(circle at 10% 10%, rgba(28, 139, 158, 0.14), transparent 42%),
+    radial-gradient(circle at 92% 88%, rgba(28, 139, 158, 0.1), transparent 45%),
+    var(--brand-wheat);
+  color: var(--text-dark);
+  display: grid;
+  gap: 1.25rem;
+  align-content: start;
+  padding-bottom: clamp(2rem, 4vw, 3.25rem);
 }
 
 .welcome-section {
-  width: 100%;
-  height: 33vh;
-  min-height: 180px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  border-radius: 18px;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 5vw, 3rem);
   text-align: center;
-  margin: 0;
-  background-color: rgb(28, 139, 158);
   color: #fff;
-  padding: 1rem;
+  background:
+    linear-gradient(140deg, rgba(28, 139, 158, 0.95), rgba(20, 107, 122, 0.96));
+  box-shadow: 0 20px 38px rgba(28, 139, 158, 0.27);
 }
 
 .welcome-section h1 {
-  font-size: 3rem;
-  margin: 0.5rem 0;
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  letter-spacing: 0.02em;
 }
 
 .welcome-section h3 {
-  font-size: 1.75rem;
-  margin: 0.5rem 0;
+  margin: 0.9rem 0 0;
+  font-size: clamp(1.05rem, 2.5vw, 1.45rem);
+  font-weight: 600;
+  opacity: 0.95;
 }
 
 .welcome-section p {
-  font-size: 1.4rem;
-  margin: 0.5rem 0;
+  margin: 0.9rem 0 0;
+  font-size: clamp(0.98rem, 2vw, 1.14rem);
+  opacity: 0.95;
+  max-width: 56ch;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .welcome-section button {
-  margin-top: 1rem;
-  padding: 0.75rem 1.5rem;
+  margin-top: 1.1rem;
+  padding: 0.78rem 1.5rem;
+  border-radius: 999px;
+  border: 2px solid transparent;
   font-size: 1rem;
-  color: rgb(28, 139, 158);
-  background-color: #fff;
-  border: none;
-  border-radius: 4px;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.welcome-section button + button {
+  margin-left: 0.75rem;
+}
+
+.get-started-button {
+  background-color: #fff;
+  color: var(--brand-teal);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+}
+
+.login-button {
+  background-color: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.75);
 }
 
 .welcome-section button:hover {
-  background-color: #464646;
+  transform: translateY(-2px);
+}
+
+.get-started-button:hover {
+  background-color: var(--surface-muted);
+}
+
+.login-button:hover {
+  background-color: rgba(255, 255, 255, 0.14);
+}
+
+.features-section,
+.get-started-section {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  border-radius: 16px;
+  background-color: var(--surface);
+  box-shadow: 0 10px 30px rgba(17, 33, 37, 0.1);
 }
 
 .features-section {
-  width: 90%;
-  margin: 20px auto;
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  column-count: 2;
-  text-align: center;
+  padding: clamp(1rem, 3vw, 1.75rem);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.features-section > div {
+  border: 1px solid rgba(28, 139, 158, 0.2);
+  border-radius: 12px;
+  padding: 1rem;
+  background: linear-gradient(180deg, #fff 0%, #f9fdfd 100%);
+}
+
+.features-section h2,
+.get-started-section h2 {
+  margin: 0;
+  color: var(--brand-teal);
+  font-size: clamp(1.35rem, 2.8vw, 1.85rem);
+}
+
+.features-section p,
+.get-started-section p {
+  margin: 0.65rem 0 0;
+  line-height: 1.55;
 }
 
 .get-started-section {
-  width: 90%;
-  margin: 20px auto;
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  padding: clamp(1.3rem, 3vw, 2rem);
   text-align: center;
 }
 
-h2{
-    color: rgb(28, 139, 158);
-    font-size: 2rem;
+.get-started-section p + p {
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 760px) {
+  .features-section {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome-section button {
+    width: min(260px, 100%);
+  }
+
+  .welcome-section button + button {
+    margin-left: 0;
+  }
 }

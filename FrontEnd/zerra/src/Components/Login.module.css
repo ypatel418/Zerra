@@ -1,49 +1,93 @@
-.login-container{
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    height: 100vh;
+.login-container {
+    min-height: 100vh;
     width: 100%;
-    background-color: wheat;
+    padding: clamp(1.2rem, 3vw, 2rem);
+    background:
+        radial-gradient(circle at 84% 10%, rgba(28, 139, 158, 0.16), transparent 40%),
+        radial-gradient(circle at 10% 90%, rgba(28, 139, 158, 0.1), transparent 42%),
+        wheat;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 0.9rem;
 }
 
-h1{
+.login-container h1 {
+    width: min(500px, 100%);
+    margin: 0 0 0.85rem;
     text-align: center;
-    margin-top: 2rem;
+    color: rgb(28, 139, 158);
+    font-size: clamp(1.8rem, 4vw, 2.35rem);
 }
 
 .login-form {
+    width: min(500px, 100%);
+    background-color: #fff;
+    border: 1px solid rgba(28, 139, 158, 0.22);
+    border-radius: 16px;
+    box-shadow: 0 14px 35px rgba(17, 33, 37, 0.12);
+    padding: clamp(1rem, 2.6vw, 1.6rem);
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 20px;
+    gap: 0.9rem;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
 }
 
 .login-label {
-    font-weight: bold;
+    display: block;
+    font-weight: 700;
+    color: #2d2d2d;
+    letter-spacing: 0.01em;
 }
 
-input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
+.login-form :global(.MuiTextField-root) {
+    width: 100%;
 }
 
-button{
-    margin-top: 1rem;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    color: rgb(28, 139, 158);
-    background-color: #fff;
-    border: none;
-    border-radius: 4px;
+.login-form button {
+    margin-top: 0.1rem;
+    padding: 0.78rem 1.1rem;
+    border-radius: 999px;
+    border: 2px solid transparent;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    font-size: 0.98rem;
+    font-weight: 700;
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-button:hover {
-    background-color: #464646;
-    color: whitesmoke;
+.login-form button:first-of-type {
+    background-color: rgb(28, 139, 158);
+    color: #fff;
+}
+
+.login-form button:first-of-type:hover {
+    background-color: rgb(23, 119, 135);
+    transform: translateY(-1px);
+}
+
+.login-form button:not(:first-of-type) {
+    background-color: #fff;
+    color: rgb(28, 139, 158);
+    border-color: rgba(28, 139, 158, 0.55);
+}
+
+.login-form button:not(:first-of-type):hover {
+    background-color: rgba(28, 139, 158, 0.08);
+    transform: translateY(-1px);
+}
+
+.login-container :global(.MuiAlert-root) {
+    width: min(500px, 100%);
+    margin-top: 0;
+}
+
+@media (max-width: 560px) {
+    .login-form {
+        padding: 1rem;
+    }
 }

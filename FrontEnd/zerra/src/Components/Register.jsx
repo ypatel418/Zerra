@@ -95,30 +95,39 @@ function Register() {
             <h1>Register</h1>
             <p>Password must be at least 8 characters long, contain at least one uppercase letter, and one number.</p>
             <form onSubmit={handleRegister} className={styles["register-form"]}>
-                <label htmlFor="email">Email:</label>
-                <TextField
-                    required
-                    name="email"
-                    id="email"
-                    label="Email"
-                    type="email"
-                />
-                <label htmlFor="password">Password:</label>
-                <TextField
-                    required
-                    name="password"
-                    id="password"
-                    label="Password"
-                    type="password"
-                />
-                <label htmlFor="confirmPassword">Confirm Password:</label>
-                <TextField
-                    required
-                    name="confirmPassword"
-                    id="confirmPassword"
-                    label="Confirm Password"
-                    type="password"
-                />
+                <div className={styles["field-group"]}>
+                    <label htmlFor="email">Email:</label>
+                    <TextField
+                        required
+                        name="email"
+                        id="email"
+                        label="Email"
+                        type="email"
+                    />
+                </div>
+
+                <div className={styles["field-group"]}>
+                    <label htmlFor="password">Password:</label>
+                    <TextField
+                        required
+                        name="password"
+                        id="password"
+                        label="Password"
+                        type="password"
+                    />
+                </div>
+
+                <div className={styles["field-group"]}>
+                    <label htmlFor="confirmPassword">Confirm Password:</label>
+                    <TextField
+                        required
+                        name="confirmPassword"
+                        id="confirmPassword"
+                        label="Confirm Password"
+                        type="password"
+                    />
+                </div>
+
                 <button type="submit">Register</button>
             </form>
 

@@ -57,11 +57,9 @@ function Login() {
         <div className={styles["login-container"]}>
             <h1>Please Login</h1>
             <form onSubmit={handleLogin} className={styles["login-form"]}>
-                <label className={styles["login-label"]}>
-                    Email:
-                    <div>
-                        <br />
-                        <TextField
+                <div className={styles["field-group"]}>
+                    <label htmlFor="email" className={styles["login-label"]}>Email:</label>
+                    <TextField
                         required
                         name="email"
                         id="email"
@@ -69,25 +67,21 @@ function Login() {
                         placeholder="Enter Email"
                         type="email"
                         autoComplete="email"
-                        />
-                    </div>
-                </label>
-                <br />
-                <label className={styles["login-label"]}>
-                    Password:
-                    <div>
-                        <br />
-                        <TextField
+                    />
+                </div>
+
+                <div className={styles["field-group"]}>
+                    <label htmlFor="password" className={styles["login-label"]}>Password:</label>
+                    <TextField
                         required
                         name="password"
                         id="password"
                         label="Password"
                         type="password"
                         placeholder="Enter Password"
-                        />
-                    </div>
-                </label>
-                <br />
+                    />
+                </div>
+
                 <button type="submit">Login</button>
                 
                 {/* Add a button to navigate to the register page */}

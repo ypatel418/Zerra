@@ -60,7 +60,10 @@ public class FileController {
     @PostMapping("/upload/{userID}")
     public ResponseEntity<File> uploadFile(@RequestPart MultipartFile file, @PathVariable String userID) {
         try {
-            if(userService.userMaxStorageReached(userID)) {
+            File incomingFile = new File();
+            incomingFile.setData(file.getBytes());
+
+            if(userService.userMaxStorageReached(userID, incomingFile)) {
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
 
