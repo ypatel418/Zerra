@@ -1,0 +1,21 @@
+/* Global reset to remove page gutters and prevent horizontal scroll */
+:root {
+	--brand-teal: rgb(28, 139, 158);
+	--brand-wheat: wheat;
+}
+
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+html, body, #root {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	overflow-x: hidden; /* prevent horizontal scrollbar */
+}
+
+/* Optional: ensure body uses a neutral background by default */
+body {
+	background-color: var(--brand-wheat);
+}
