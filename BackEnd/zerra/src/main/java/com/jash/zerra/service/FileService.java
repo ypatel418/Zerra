@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.jash.zerra.config.EncryptionProperties;
 import com.jash.zerra.dto.FileDTO;
 import com.jash.zerra.model.File;
 import com.jash.zerra.model.User;
@@ -23,26 +24,54 @@ public class FileService {
     @Autowired
     private UserRepo userRepo;
 
+    // Encryption
+    @Autowired
+    private EncryptionService encryptionService;
+    @Autowired
+    private EncryptionProperties encryptionProps;
+
     public List<FileDTO> getAllFiles(String UserID) {
         List<File> files = repo.findByOwnerId(UserID);
         return files.stream().map(FileDTO::new).collect(Collectors.toList());
     }
 
-    public File uploadFile(MultipartFile file, String userID) {
+    public File uploadFile(MultipartFile file, String userID) throws Exception {
         File f = new File();
         f.setOriginalFileName(file.getOriginalFilename());
         f.setStoredFileName(file.getOriginalFilename());
         f.setFileType(file.getContentType());
         f.setFileSize(file.getSize());
-        try {
-            f.setData(file.getBytes());
-        } catch (Exception e) {
-            e.getMessage();
+        
+        byte[] fileData = file.getBytes();
+
+        if(encryptionProps.isEnabled()) {
+            byte[] iv = encryptionService.generateIv();
+            byte[] encryptedData = encryptionService.encrypt(fileData, userID, iv);
+            f.setData(encryptedData);
+            f.setEncryptionVersion(encryptionProps.getAlgorithmVersion());
+            f.setEncryptionIv(iv);
+            f.setEncryptedSize((long) encryptedData.length);
+        } else {
+            f.setData(fileData);
+            f.setEncryptionVersion(0); // Not encrypted
         }
-        LocalDateTime now = LocalDateTime.now();
-        f.setUploadedAt(now);
+
+        f.setUploadedAt(LocalDateTime.now());
         f.setOwner(userRepo.findById(userID).orElse(null));
         return repo.save(f);
+    }
+
+    // Returns decrypted bytes for download - handles both encrypted and unencrypted rows
+    public byte[] getDecryptedFileData(Long fileId) throws Exception {
+        File file = repo.findById(fileId).orElse(null);
+        if (file == null) throw new RuntimeException("File not found: " + fileId);
+
+        if (file.getEncryptionVersion() == 0) {
+            return file.getData(); // Not encrypted, return raw bytes
+        }
+
+        String userID = file.getOwner().getId();
+        return encryptionService.decrypt(file.getData(), userID, file.getEncryptionIv());
     }
 
     public File getFileById(Long id) {

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
@@ -37,6 +38,7 @@ public class File {
     private String fileType;
     private Long fileSize;
 
+    @JsonIgnore
     @Lob // Large Object in DB
     private byte[] data; // File data
 
@@ -56,4 +58,12 @@ public class File {
     @JsonIgnoreProperties({"files", "hibernateLazyInitializer", "handler"})
     private Set<User> sharedWith; // Want a set to avoid duplicate users
 
+    // Encryption metadata
+    private int encryptionVersion; // 0 = not encrypted, 1+ = encrypted with that key version
+
+    @Lob
+    @JsonIgnore
+    private byte[] encryptionIv; // Initialization Vector for AES-GCM
+
+    private Long encryptedSize; // Size of the encrypted data, which may differ from original file size due to encryption overhead
 }

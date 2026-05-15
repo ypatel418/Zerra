@@ -60,10 +60,7 @@ public class FileController {
     @PostMapping("/upload/{userID}")
     public ResponseEntity<File> uploadFile(@RequestPart MultipartFile file, @PathVariable String userID) {
         try {
-            File incomingFile = new File();
-            incomingFile.setData(file.getBytes());
-
-            if(userService.userMaxStorageReached(userID, incomingFile)) {
+            if(userService.userMaxStorageReached(userID, file.getSize())) {
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
 
@@ -95,14 +92,19 @@ public class FileController {
 
     @GetMapping("/download/{id}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable Long id) {
+        try {
+            File file = services.getFileById(id);
+            byte[] fileData = services.getDecryptedFileData(id);
 
-        File file = services.getFileById(id);
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getStoredFileName() + "\"")
-                .contentType(MediaType.APPLICATION_OCTET_STREAM) // Binary Type
-                .contentLength(file.getData().length)
-                .body(file.getData());
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getStoredFileName() + "\"")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .contentLength(fileData.length)
+                    .body(fileData);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("/share/{id}")
