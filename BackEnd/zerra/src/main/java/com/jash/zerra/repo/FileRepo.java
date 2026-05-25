@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.jash.zerra.model.File;
+import org.springframework.data.domain.Pageable;
 
 @Repository
 public interface FileRepo extends JpaRepository<File, Long> {
@@ -24,4 +25,7 @@ public interface FileRepo extends JpaRepository<File, Long> {
         List<File> searchFilesByKeyword(@Param("keyword") String keyword, @Param("userID") String userID);
 
         public List<File> findBySharedWithId(String userID);
+
+        @Query("SELECT f FROM File f WHERE f.encryptionVersion = 0 AND f.id > :lastId ORDER BY f.id ASC")
+        List<File> findUnencryptedBatch(@Param("lastId") long lastId, Pageable pageable);
 }

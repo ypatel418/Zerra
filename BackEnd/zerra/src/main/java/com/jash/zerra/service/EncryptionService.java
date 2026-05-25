@@ -15,7 +15,7 @@ import com.jash.zerra.config.EncryptionProperties;
 
 @Service
 public class EncryptionService {
-    private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
+    private static final String ALGORITHM = "AES/GCM/NoPadding";
     private static final int GCM_TAG_LENGTH = 128; // bits
     private static final int IV_LENGTH = 12; // bytes
     private static final int KEY_LENGTH = 256; // bits
@@ -53,7 +53,7 @@ public class EncryptionService {
     // This method takes the plaintext, user ID, and IV as inputs and returns the encrypted ciphertext.
     public byte[] encrypt(byte[] plaintext, String userId, byte[] iv) throws Exception {
         SecretKey key = deriveKey(userId);
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        Cipher cipher = Cipher.getInstance(ALGORITHM, "SunJCE");
         cipher.init(Cipher.ENCRYPT_MODE, key, new GCMParameterSpec(GCM_TAG_LENGTH, iv));
         return cipher.doFinal(plaintext);
     }
@@ -62,7 +62,7 @@ public class EncryptionService {
     // This method takes the ciphertext, user ID, and IV as inputs and returns the decrypted
     public byte[] decrypt(byte[] ciphertext, String userId, byte[] iv) throws Exception {
         SecretKey key = deriveKey(userId);
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        Cipher cipher = Cipher.getInstance(ALGORITHM, "SunJCE");
         cipher.init(Cipher.DECRYPT_MODE, key, new GCMParameterSpec(GCM_TAG_LENGTH, iv));
         return cipher.doFinal(ciphertext);
     }
