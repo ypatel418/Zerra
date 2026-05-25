@@ -90,6 +90,9 @@ public class FileService {
         File file = repo.findById(id).orElse(null);
         User sharedUser = userRepo.findByEmail(email);
         if (file != null && sharedUser != null) {
+            if (file.getSharedWith() == null) {
+                file.setSharedWith(new java.util.HashSet<>());
+            }
             file.getSharedWith().add(sharedUser);
             repo.save(file);
         } else {
