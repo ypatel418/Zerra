@@ -105,6 +105,17 @@ public class FileController {
                 .body(file.getData());
     }
 
+    @GetMapping("/preview/{id}")
+    public ResponseEntity<byte[]> previewFile(@PathVariable Long id) {
+        File file = services.getFileById(id);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getStoredFileName() + "\"")
+                .contentType(MediaType.parseMediaType(file.getFileType()))
+                .contentLength(file.getData().length)
+                .body(file.getData());
+    }
+
     @PutMapping("/share/{id}")
     public ResponseEntity<String> shareFile(@PathVariable Long id, @RequestParam String email) {
         try {

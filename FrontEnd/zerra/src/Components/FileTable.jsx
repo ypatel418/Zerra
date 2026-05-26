@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import { auth } from "../firebase.js";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import DeletePopup from "./DeletePopup.jsx";
+import FilePreview from "./FilePreview.jsx";
 
 const FileTable = (props) => {
 
@@ -25,6 +26,7 @@ const FileTable = (props) => {
       props.rows.map((file) => ({
         id: file.id,
         fileName: file.originalFileName,
+        type: file.fileType,
         owner: (file.owner.email === currentUser?.email) ? "Me" : file.owner.email
       }))
     );
@@ -57,7 +59,14 @@ const FileTable = (props) => {
 
 
   const columns = [
-      { field: 'fileName', headerName: 'File Name', width: 200 },
+      { field: 'fileName', 
+        headerName: 'File Name', 
+        width: 200,
+        renderCell: (params) => (
+          <FilePreview file={params.row} onDownload={downloadFile} onDelete2={handleDeleteFile}/>
+        ) 
+        },
+
       { field: 'owner', headerName: 'Owner', width: 200 },
 
       { 
