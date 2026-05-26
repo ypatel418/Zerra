@@ -3,7 +3,6 @@ package com.jash.zerra.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jash.zerra.model.File;
 import com.jash.zerra.model.User;
 import com.jash.zerra.repo.FileRepo;
 import com.jash.zerra.repo.UserRepo;
@@ -26,11 +25,9 @@ public class UserService {
         return fileRepo.sumFileSizeByOwnerId(userID);
     }
 
-    public boolean userMaxStorageReached(String userID, File uploadedFile) {
-        // Max Storage at 100 mb
+    public boolean userMaxStorageReached(String userID, long uploadedFileSize) {
         Long maxStorage = 100L * 1024L * 1024L;
         Long currentStorageUsage = getUserStorageUsage(userID);
-        Long uploadedFileSize = uploadedFile.getFileSize() != null ? uploadedFile.getFileSize() : 0L;
         
         return (currentStorageUsage + uploadedFileSize) >= maxStorage;
     }

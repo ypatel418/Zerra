@@ -22,6 +22,18 @@ The current deployment of Zerra is on fly.io for the backend, and Vercel for the
 
 **Server:** Java, Spring Boot Web, MySQL, Hibernate, LOMBOK, 
 
+## Environment Variables
+
+| Variable | Required | Description |
+|---|---|---|
+| `ZERRA_MASTER_KEY` | Yes (when encryption enabled) | Base64-encoded 256-bit master key used for per-user key derivation. Generate with: `openssl rand -base64 32` |
+
+### Generating a master key (local dev)
+```bash
+openssl rand -base64 32
+```
+Copy the output and set it as the env var in your IDE run config or `.env` file. Never commit a real key to source control.
+
 
 ## Authors
 
