@@ -42,7 +42,7 @@ const FilePreview = ({file, onDownload, onDelete2}) => {
 
 
     function renderPreview() {
-        const type = file.type;
+        const type = file.type || '';
 
         if (type.startsWith('image/')) return <img src={previewUrl} style={{ width: '100%' }} />;
         if (type === 'application/pdf') {
