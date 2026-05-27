@@ -107,6 +107,29 @@ public class FileController {
         }
     }
 
+    @GetMapping("/preview/{id}")
+    public ResponseEntity<byte[]> previewFile(@PathVariable Long id) {
+        File file = services.getFileById(id);
+        if (file == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
+        try {
+            if (file.getFileType() != null) {
+                mediaType = MediaType.parseMediaType(file.getFileType());
+            }
+        } catch (Exception ignored) {
+            mediaType = MediaType.APPLICATION_OCTET_STREAM;
+        }
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getStoredFileName() + "\"")
+                .contentType(mediaType)
+                .contentLength(file.getData().length)
+                .body(file.getData());
+    }
+
     @PutMapping("/share/{id}")
     public ResponseEntity<String> shareFile(@PathVariable Long id, @RequestParam String email) {
         try {
