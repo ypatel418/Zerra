@@ -1,5 +1,5 @@
 import Dialog from "@mui/material/Dialog";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
@@ -18,6 +18,13 @@ const FilePreview = ({file, onDownload, onDelete2}) => {
     const [previewUrl, setPreviewUrl] = useState(null);
     const [previewFile, setPreviewFile] = useState(null);
 
+    useEffect(() => {
+        if (!open && previewUrl) {
+            window.URL.revokeObjectURL(previewUrl);
+            setPreviewUrl(null);
+            setPreviewFile(null);
+        }
+    }, [open, previewUrl]);
     async function handlePreview() {
         try {
             const response = await axios.get(
